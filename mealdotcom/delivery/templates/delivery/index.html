@@ -11,15 +11,24 @@
 <body>
   <h1>Welcome to Meal[Dot]Com</h1>
 
+  {% if error%}
+    <p style="color: red;">{{ error }}</p>
+  {% endif %}
+
+  {% if success %}
+    <p style="color: green;">{{ success }}</p>
+  {% endif %}
+
   <button onclick="showSignIn()">SIGN_IN</button>
   <button onclick="showSignUp()">SIGN_UP</button>
 
   <!-- Sign in -->
   <div id="signin">
     <h2>Sign In</h2>
-    <form>
-      <input type="email" placeholder="Email"><br><br>
-      <input type="password" placeholder="password"><br><br>
+    <form method="post" action="{% url 'signin' %}">
+      {% csrf_token %}
+      <input type="email" placeholder="Email" name="email"><br><br>
+      <input type="password" placeholder="password" name="password"><br><br>
       <button type="submit">Login</button>
     </form>
   </div>
@@ -28,10 +37,11 @@
   <div id="signup" style="display: none;">
     <h2>Sign Up</h2>
     <form action="{% url 'signup' %}" method="post">
+      {% csrf_token %}
 
       <input type="text" placeholder="Name" name="name"><br><br>
 
-      <input type="email" placeholder="Email" name="email"><br><br>
+      <input type="email" placeholder="Email" name="email" value="{{ request.POST.email }}"><br><br>
 
       <input type="password" placeholder="Password" name="password"><br><br>
 
@@ -43,5 +53,7 @@
   </div>
 
   <script src="{% static 'delivery/main.js' %}"></script>
+
+  <script>autoToggleForm("{{ show }}");</script>
 </body>
 </html>
