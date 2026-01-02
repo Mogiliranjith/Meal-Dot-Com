@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from.models import User
+from.models import User, Restaurant
 
 # Create your views here.
 def index(request):
@@ -84,4 +84,27 @@ def signin(request):
   
 #opening add restaurants for the admin
 def open_add_restaurant(request):
-  return HttpResponse("Working")
+  return render(request, 'delivery/add_restaurant.html')
+
+#adding restaurants
+def add_restaurant(request):
+  if request.method == 'POST':
+    name = request.POST.get('name')
+    picture = request.POST.get('picture')
+    cuisine = request.POST.get('cuisine')
+    address = request.POST.get('address')
+    rating = request.POST.get('rating')
+
+    #check for duplicate by name + address
+    if Restaurant.objects.filter(name = name, address = address).exists():
+      return HttpResponse("Duplicate restaurant!")
+    
+    Restaurant.objects.create(
+      name = name,
+      picture = picture,
+      cuisine = cuisine,
+      address = address,
+      rating = rating,
+    )
+    return HttpResponse("Successfully Added !")
+    #return render(request, 'admin_home.html')
