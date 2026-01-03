@@ -12,7 +12,7 @@ class User(models.Model):
 
 class Restaurant(models.Model):
   name = models.CharField(max_length = 20)
-  picture = models.URLField(max_length = 200, default='./mealdotcom/delivery/images/default.jpg')
+  picture = models.URLField(max_length = 200, default='/delivery/images/default.jpg')
   cuisine = models.CharField(max_length = 200)
   address = models.CharField(max_length= 200, default= "No address provided")
   rating = models.FloatField()
