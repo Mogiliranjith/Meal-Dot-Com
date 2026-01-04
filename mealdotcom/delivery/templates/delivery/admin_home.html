@@ -2,13 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Page</title>
+  <title>Admin Dashboard</title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
 </head>
 <body>
-  <h3>Welcome to Admin Home!</h3>
+  {% if messages %}
+    {% for message in messages %}
+      <p class="msg {{ message.tags }}">
+        {{ message }}
+      </p>
+    {% endfor %}
+  {% endif %}
 
-  <a href="open_add_restaurant">Add new Restaurants</a><br><br>
-  <a href="open_show_restaurant">Show Restaurants</a>
+  <h3>Welcome to Admin Home</h3>
+
+  <!-- Button to open add restaurant page -->
+  <a href="{% url 'open_add_restaurant' %}">
+    <button>Add New Restaurant</button>
+  </a>
+
+  <br><br>
+
+  <!-- Restaurant table (moved from show_restaurant.html) -->
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Restaurant name</th>
+        <th>Picture</th>
+        <th>Address</th>
+        <th>Location</th>
+        <th>Cuisine</th>
+        <th>Rating</th>
+        <th>Operations</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in restaurantList %}
+        <tr>
+          <td>{{ r.name }}</td>
+          <td>
+            <img src="{{ r.picture }}" width="100">
+          </td>
+          <td>{{ r.address }}</td>
+          <td>
+            <a href="{{ r.location }}" target="_blank">Map</a>
+          </td>
+          <td>{{ r.cuisine }}</td>
+          <td>{{ r.rating }}</td>
+          <td>
+            <a href="">Update</a><br>
+            <a href="">Delete</a><br>
+            <a href="">Menu</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7">No restaurants added yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 </body>
 </html>

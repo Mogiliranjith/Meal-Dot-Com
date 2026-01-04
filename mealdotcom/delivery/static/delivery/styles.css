@@ -1,3 +1,22 @@
 body {
-  background-color: aquamarine;
+  background-color: #f4f4f4;
+}
+
+/* generalized success/error/warning message styles */
+
+.msg {
+  font-weight: 600px;
+  margin: 10px 0;
+}
+
+.msg.succss {
+  color: green;
+}
+
+.msg.error {
+  color: red;
+}
+
+.msg.warning {
+  color: orange;
 }

@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.http import HttpResponse
 from .models import User, Restaurant
 
@@ -65,7 +66,7 @@ def signin(request):
   
   # Admin login
   if user.email == "admin@gmail.com":
-    return render(request, "delivery/admin_home.html")
+    return admin_home(request)
   
   # Customer login
   restaurants = Restaurant.objects.all()
@@ -96,7 +97,8 @@ def add_restaurant(request):
 
   #check for duplicate by name + address
   if Restaurant.objects.filter(name = name, address = address).exists():
-    return HttpResponse("Duplicate restaurant!")
+    messages.error(request, "Restaurant already exists.")
+    return redirect('admin_home')
     
   Restaurant.objects.create(
     name = name,
@@ -106,9 +108,14 @@ def add_restaurant(request):
     location = location,
     rating = rating,
   )
-  return HttpResponse("Successfully Added !")
-  #return render(request, 'admin_home.html')
+  messages.success(request, "Restaurant added successfully.")
+  return redirect('admin_home')
 
-def open_show_restaurant(request):
+def admin_home(request):
   restaurantList = Restaurant.objects.all()
-  return render(request, 'delivery/show_restaurant.html', {"restaurantList" : restaurantList})
+  return render(
+    request, "delivery/admin_home.html",
+    {
+      "restaurantList": restaurantList
+    }
+  )
