@@ -15,4 +15,5 @@ class Restaurant(models.Model):
   picture = models.URLField(max_length = 200, default='/delivery/images/default.jpg')
   cuisine = models.CharField(max_length = 200)
   address = models.CharField(max_length= 200, default= "No address provided")
+  location = models.URLField(max_length= 300, default='https://maps.app.goo.gl/s635cY4K5dwBSeog7')
   rating = models.FloatField()

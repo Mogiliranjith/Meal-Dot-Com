@@ -6,6 +6,7 @@ from .models import User, Restaurant
 def index(request):
   return render(request, "delivery/index.html")
 
+# Signup logic
 def signup(request):
   if request.method != 'POST':
     return HttpResponse("Invalid Request")
@@ -90,6 +91,7 @@ def add_restaurant(request):
   picture = request.POST.get('picture')
   cuisine = request.POST.get('cuisine')
   address = request.POST.get('address')
+  location = request.POST.get('location')
   rating = request.POST.get('rating')
 
   #check for duplicate by name + address
@@ -101,6 +103,7 @@ def add_restaurant(request):
     picture = picture,
     cuisine = cuisine,
     address = address,
+    location = location,
     rating = rating,
   )
   return HttpResponse("Successfully Added !")
