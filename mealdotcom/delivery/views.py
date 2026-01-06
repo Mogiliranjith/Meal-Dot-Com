@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from .models import User, Restaurant
+from .models import User, Restaurant, Item
 
 # Create your views here.
 def index(request):
@@ -125,4 +125,42 @@ def open_update_menu(request, restaurant_id):
     restaurant = Restaurant.objects.get(id = restaurant_id)
     itemList = restaurant.items.all()
     #itemList = Item.objects.all()
-    return render(request, 'update_menu.html',{"itemList" : itemList, "restaurant" : restaurant})
+    return render(request, "delivery/update_menu.html",{"itemList" : itemList, "restaurant" : restaurant})
+
+# item adding functionality
+def update_menu(request, restaurant_id):
+  restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+
+  if request.method == 'POST':
+      name = request.POST.get('name')
+      description = request.POST.get('description')
+      price = request.POST.get('price')
+      vegeterian = request.POST.get('vegeterian') == 'on'
+      picture = request.POST.get('picture')
+
+      if Item.objects.filter(name=name, restaurant=restaurant).exists():
+          return HttpResponse("Duplicate item for this restaurant!")
+
+      Item.objects.create(
+          restaurant=restaurant,
+          name=name,
+          description=description,
+          price=price,
+          vegeterian=vegeterian,
+          picture=picture,
+      )
+
+      return redirect('open_update_menu', restaurant_id=restaurant.id)
+
+  return HttpResponse("Invalid Request")
+
+# Deleting a menu item
+def delete_menu_item(request, item_id):
+  if request.method != "POST":
+      return HttpResponse("Invalid Request")
+
+  item = get_object_or_404(Item, id=item_id)
+  restaurant_id = item.restaurant.id
+  item.delete()
+
+  return redirect('open_update_menu', restaurant_id=restaurant_id)
