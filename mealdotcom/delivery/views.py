@@ -119,3 +119,10 @@ def admin_home(request):
       "restaurantList": restaurantList
     }
   )
+
+#opening update menu html
+def open_update_menu(request, restaurant_id):
+    restaurant = Restaurant.objects.get(id = restaurant_id)
+    itemList = restaurant.items.all()
+    #itemList = Item.objects.all()
+    return render(request, 'update_menu.html',{"itemList" : itemList, "restaurant" : restaurant})
