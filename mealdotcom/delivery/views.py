@@ -190,3 +190,55 @@ def add_to_cart(request, item_id, name):
   cart, created = Cart.objects.get_or_create(customer = customer)
   cart.items.add(item)
   return HttpResponse('added to cart')
+
+# opening update restaurant.html link
+def open_update_restaurant(request, restaurant_id):
+  restaurant = Restaurant.objects.get(id = restaurant_id)
+  return render(request, 'delivery/update_restaurant.html', {"restaurant": restaurant})
+# clicking on the update restaurant button
+# def update_restaurant(request, restaurant_id):
+#   restaurant = Restaurant.objects.get(id = restaurant_id)
+#   if request.method == 'POST':
+#     name = request.POST.get('name')
+#     picture = request.POST.get('picture')
+#     cuisine = request.POST.get('cuisine')
+#     rating = request.POST.get('rating')
+
+#     if not picture:
+#       picture = 'static/delivery/images/default.jpg'
+
+#     restaurant.name = name
+#     restaurant.picture = picture
+#     restaurant.cuisine = cuisine
+#     restaurant.rating = rating
+
+#     restaurant.save()
+  
+#   restaurantList = Restaurant.objects.all()
+#   return render(request, 'delivery/admin_home.html', {"restaurantList"})
+
+# clicking on the update restaurant button
+def update_restaurant(request, restaurant_id):
+  restaurant = Restaurant.objects.get(id = restaurant_id)
+  if request.method != 'POST':
+    return HttpResponse("Invalid Request")
+  
+  name = request.POST.get('name')
+  picture = request.POST.get('picture')
+  cuisine = request.POST.get('cuisine')
+  rating = request.POST.get('rating')
+
+  if not picture:
+    picture = '/static/delivery/images/default.jpg'
+    
+  restaurant.name = name
+  restaurant.picture = picture
+  restaurant.cuisine = cuisine
+  restaurant.rating = rating
+
+  restaurant.save()
+  
+  restaurantList = Restaurant.objects.all()
+
+  messages.success(request, "Restaurant added successfully.")
+  return redirect('admin_home')
