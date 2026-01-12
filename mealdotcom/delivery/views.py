@@ -1,7 +1,8 @@
+from os import name
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
-from .models import User, Restaurant, Item
+from .models import Cart, User, Restaurant, Item
 
 # Create your views here.
 def index(request):
@@ -164,3 +165,22 @@ def delete_menu_item(request, item_id):
   item.delete()
 
   return redirect('open_update_menu', restaurant_id=restaurant_id)
+
+#Customer view menu 
+def view_menu(request, restaurant_id, name):
+  restaurant = Restaurant.objects.get(id = restaurant_id)
+  itemList = restaurant.items.all()
+  #return HttpResponse("Items collected")
+  #itemList = Item.objects.all()
+  return render(request, 'delivery/customer_menu.html',
+                {"itemList" : itemList,
+                  "restaurant" : restaurant, 
+                  "name":name})
+
+# add to card show
+def add_to_cart(request, item_id, name):
+  item = Item.objects.get(id = item_id)
+  customer = User.objects.get(name = name)
+  cart, created = Cart.objects.get_or_create(customer = customer)
+  cart.items.add(item)
+  return HttpResponse('added to cart')
