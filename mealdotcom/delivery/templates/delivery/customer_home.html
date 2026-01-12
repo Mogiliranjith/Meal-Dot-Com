@@ -13,7 +13,7 @@
     <div class="card-container">
         {% for r in restaurantList %}
             <div class="restaurant-card">
-                <img src="{{ r.picture }}" alt="{{ r.name}}">
+                <img src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ r.name }}">
 
                 <h4>{{ r.name }}</h4>
                 <p><strong>Cuisine:</strong> {{ r.cuisine }}</p>

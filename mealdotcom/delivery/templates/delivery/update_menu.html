@@ -22,7 +22,7 @@
             {% for item in itemList %}
                 <tr>
                     <td>{{ item.name }}</td>
-                    <td><img src="{{ item.picture }}"></td>
+                    <td><img src="{{ item.picture|default:'/static/delivery/images/default.jpg' }}" alt="item.name"></td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.price }}</td>
                     <td>{{ item.vegeterian }}</td>

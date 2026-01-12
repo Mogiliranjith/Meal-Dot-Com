@@ -96,6 +96,9 @@ def add_restaurant(request):
   location = request.POST.get('location')
   rating = request.POST.get('rating')
 
+  if not picture:
+    picture = '/static/delivery/images/default.jpg'
+
   #check for duplicate by name + address
   if Restaurant.objects.filter(name = name, address = address).exists():
     messages.error(request, "Restaurant already exists.")
@@ -139,6 +142,9 @@ def update_menu(request, restaurant_id):
       vegeterian = request.POST.get('vegeterian') == 'on'
       picture = request.POST.get('picture')
 
+      if not picture:
+        picture = 'static/delivery/images/default.jpg'
+
       if Item.objects.filter(name=name, restaurant=restaurant).exists():
           return HttpResponse("Duplicate item for this restaurant!")
 
@@ -177,7 +183,7 @@ def view_menu(request, restaurant_id, name):
                   "restaurant" : restaurant, 
                   "name":name})
 
-# add to card show
+# add to cart show
 def add_to_cart(request, item_id, name):
   item = Item.objects.get(id = item_id)
   customer = User.objects.get(name = name)
