@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Home</title>
     {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
     <link rel="stylesheet" href="{% static 'delivery/customer_home.css' %}">
 </head>
 <body>
@@ -12,7 +13,7 @@
     
     <div class="card-container">
         {% for r in restaurantList %}
-            <div class="restaurant-card">
+            <div class="cards">
                 <img src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ r.name }}">
 
                 <h4>{{ r.name }}</h4>

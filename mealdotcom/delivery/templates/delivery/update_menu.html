@@ -4,43 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
 </head>
 <body>
     <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item name</th>
-                <th>Picture</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Is veg/</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in itemList %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td><img src="{{ item.picture|default:'/static/delivery/images/default.jpg' }}" alt="item.name"></td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.vegeterian }}</td>
+    <h2>Menu Items</h2>
+    <div class="card-container">
+        {% for item in itemList %}
+         <div class="cards">
+            <img src="{{ item.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ item.name}}">
 
-                    <td>
-                        <form action="{% url 'delete_menu_item' item.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    onclick="return confirm('Delete this item?')">
-                                Delete
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.description }}</p>
+            <p><strong>Price:</strong> ₹{{ item.price }}</p>
+            <p><strong>Veg:</strong> {{item.vegeterian }}</p>
 
+            <form action="{% url 'delete_menu_item' item.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit"
+                        onclick="return confirm('Delete this item?')">
+                    Delete
+            </button>
+            </form>
+         </div>
+        {% endfor %}
+    </div>
 
     <!-- add food item (form) -->
     <h2>Add Menu Item</h2>

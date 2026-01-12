@@ -172,24 +172,6 @@ def delete_menu_item(request, item_id):
 
   return redirect('open_update_menu', restaurant_id=restaurant_id)
 
-#Customer view menu 
-def view_menu(request, restaurant_id, name):
-  restaurant = Restaurant.objects.get(id = restaurant_id)
-  itemList = restaurant.items.all()
-  #return HttpResponse("Items collected")
-  #itemList = Item.objects.all()
-  return render(request, 'delivery/customer_menu.html',
-                {"itemList" : itemList,
-                  "restaurant" : restaurant, 
-                  "name":name})
-
-# add to cart show
-def add_to_cart(request, item_id, name):
-  item = Item.objects.get(id = item_id)
-  customer = User.objects.get(name = name)
-  cart, created = Cart.objects.get_or_create(customer = customer)
-  cart.items.add(item)
-  return HttpResponse('added to cart')
 
 # opening update restaurant.html link
 def open_update_restaurant(request, restaurant_id):
@@ -250,3 +232,29 @@ def delete_restaurant(request, restaurant_id):
 
   restaurantList = Restaurant.objects.all()
   return render(request, 'delivery/admin_home.html', {"restaurantList": restaurantList})
+
+
+
+
+# CUSTOMER SPECIFIC
+#Customer view menu 
+def view_menu(request, restaurant_id, name):
+  restaurant = Restaurant.objects.get(id = restaurant_id)
+  itemList = restaurant.items.all()
+  #return HttpResponse("Items collected")
+  #itemList = Item.objects.all()
+  return render(request, 'delivery/customer_menu.html',
+                {"itemList" : itemList,
+                  "restaurant" : restaurant, 
+                  "name":name})
+
+# add to cart show
+def add_to_cart(request, item_id, name):
+  item = Item.objects.get(id = item_id)
+  customer = User.objects.get(name = name)
+  cart, created = Cart.objects.get_or_create(customer = customer)
+  cart.items.add(item)
+  return HttpResponse('added to cart')
+
+# show cart functionality
+

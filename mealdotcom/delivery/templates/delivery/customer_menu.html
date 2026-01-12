@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Menu</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
 </head>
 <body>
     <h3>Welcome {{name}}!</h3>
@@ -11,35 +13,21 @@
     <a href="{% url 'show_cart' name %}" > Go to cart</a>
 
     <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item name</th>
-                <th>Picture</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Is veg?</th>
-                <th>Operation</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for item in itemList %}
-                <tr>
-                    <td>{{ item.name }}</td>
-                    <td>
-                        <img src="{{ item.picture }}">
-                    </td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.vegeterian }}</td>
-                    <td>
-                        <a href="{% url 'add_to_cart' item.id name %}">
-                            Add to cart
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card-container">
+        {% for item in itemList %}
+            <div class="cards">
+                <img src="{{ item.picture|default:'static/delivery/images/default.jpg' }}" alt="{{ item.name }}">
+
+                <h4>{{ item.name }}</h4>
+                <p>{{ item.description }}</p>
+                <p><strong>Price:</strong> ₹{{ item.price }}</p>
+                <p><strong>Veg:</strong> {{ item.vegeterian }}</p>
+
+                <a href="{% url 'add_to_cart' item.id name %}">
+                    Add to cart
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
