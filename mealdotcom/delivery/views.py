@@ -217,7 +217,7 @@ def open_update_restaurant(request, restaurant_id):
 #   restaurantList = Restaurant.objects.all()
 #   return render(request, 'delivery/admin_home.html', {"restaurantList"})
 
-# clicking on the update restaurant button
+# clicking on the update restaurant button inside the open_update_restaurant.html
 def update_restaurant(request, restaurant_id):
   restaurant = Restaurant.objects.get(id = restaurant_id)
   if request.method != 'POST':
@@ -242,3 +242,11 @@ def update_restaurant(request, restaurant_id):
 
   messages.success(request, "Restaurant added successfully.")
   return redirect('admin_home')
+
+# Clicking on the delete restaurant button inside admin_home.html
+def delete_restaurant(request, restaurant_id):
+  restaurant = Restaurant.objects.get(id = restaurant_id)
+  restaurant.delete()
+
+  restaurantList = Restaurant.objects.all()
+  return render(request, 'delivery/admin_home.html', {"restaurantList": restaurantList})
