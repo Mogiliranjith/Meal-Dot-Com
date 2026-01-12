@@ -233,6 +233,19 @@ def delete_restaurant(request, restaurant_id):
   restaurantList = Restaurant.objects.all()
   return render(request, 'delivery/admin_home.html', {"restaurantList": restaurantList})
 
+# Viewing a particular restaurant
+def admin_restaurant_detail(request, restaurant_id):
+  restaurant = get_object_or_404(Restaurant, id = restaurant_id)
+  itemList = restaurant.items.all()
+
+  return render(
+    request,
+    "delivery/admin_restaurant_detail.html",
+    {
+      "restaurant": restaurant,
+      "itemList": itemList
+    }
+  )
 
 
 

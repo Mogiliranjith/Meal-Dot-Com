@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Details</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
+</head>
+<body>
+
+<h2>{{ restaurant.name }}</h2>
+
+<img src="{{ restaurant.picture }}" width="200"><br><br>
+
+<p><strong>Address:</strong> {{ restaurant.address }}</p>
+<p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
+<p><strong>Rating:</strong> {{ restaurant.rating }}</p>
+<p>
+    <strong>Location:</strong>
+    <a href="{{ restaurant.location }}" target="_blank">Map</a>
+</p>
+
+<hr>
+
+<h3>Actions</h3>
+<a href="{% url 'open_update_restaurant' restaurant.id %}">Update</a> |
+<a href="{% url 'delete_restaurant' restaurant.id %}">Delete</a> |
+<a href="{% url 'open_update_menu' restaurant.id %}">Manage Menu</a>
+
+<hr>
+
+<h3>Menu Items</h3>
+
+{% if itemList %}
+<div class="card-container">
+    {% for item in itemList %}
+    <div class="cards">
+        <h4>{{ item.name }}</h4>
+
+        <p><strong>Price:</strong> ₹{{ item.price }}</p>
+        <p><strong>Type:</strong> {{ item.vegeterian|yesno:"Veg,Non-Veg" }}</p>
+
+        {% if item.picture %}
+            <img src="{{ item.picture }}" alt="{{ item.name }}">
+        {% endif %}
+
+        <form action="{% url 'delete_menu_item' item.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Delete</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No menu items added yet.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'admin_home' %}">⬅ Back to Admin Home</a>
+
+</body>
+</html>
