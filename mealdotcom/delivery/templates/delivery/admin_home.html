@@ -1,68 +1,104 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+<!DOCTYPE html>
+<html lang="en">
 
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
-  </head>
-  <body>
-    {% if messages %}
-      {% for message in messages %}
-        <p class="msg {{ message.tags }}">
-          {{ message }}
-        </p>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'delivery/modals.css' %}">
+</head>
+
+<body>
+  {% if messages %}
+  {% for message in messages %}
+  <p class="msg {{ message.tags }}">
+    {{ message }}
+  </p>
+  {% endfor %}
+  {% endif %}
+
+  <h3>Welcome to Admin Home</h3>
+
+  <!-- Button to open add restaurant page -->
+  <button onclick="openAddModal()">New Restaurant</button>
+
+  <br><br>
+
+  <!-- Restaurant table (moved from show_restaurant.html) -->
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Restaurant name</th>
+        <th>Picture</th>
+        <th>Address</th>
+        <th>Location</th>
+        <th>Cuisine</th>
+        <th>Rating</th>
+        <th>Operations</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for r in restaurantList %}
+      <tr>
+        <td>{{ r.name }}</td>
+        <td>
+          <img src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ r.name }}">
+        </td>
+        <td>{{ r.address }}</td>
+        <td>
+          <a href="{{ r.location }}" target="_blank">Map</a>
+        </td>
+        <td>{{ r.cuisine }}</td>
+        <td>{{ r.rating }}</td>
+        <td>
+          <a href="{% url 'admin_restaurant_detail' r.id %}"><button type="submit">View</button></a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No restaurants added yet.</td>
+      </tr>
       {% endfor %}
-    {% endif %}
+    </tbody>
+  </table>
 
-    <h3>Welcome to Admin Home</h3>
+  <!-- Add Restaurant Modal -->
+  <div id="addRestaurantModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeAddModal()">&times;</span>
 
-    <!-- Button to open add restaurant page -->
-    <a href="{% url 'open_add_restaurant' %}">
-      <button>Add New Restaurant</button>
-    </a>
+      <h3>Add New Restaurant</h3>
 
-    <br><br>
+      <form action="{% url 'add_restaurant' %}" method="POST">
+        {% csrf_token %}
 
-    <!-- Restaurant table (moved from show_restaurant.html) -->
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Restaurant name</th>
-          <th>Picture</th>
-          <th>Address</th>
-          <th>Location</th>
-          <th>Cuisine</th>
-          <th>Rating</th>
-          <th>Operations</th>
-        </tr>
-      </thead>
+        <label>Restaurant Name</label>
+        <input type="text" name="name" required>
 
-      <tbody>
-        {% for r in restaurantList %}
-          <tr>
-            <td>{{ r.name }}</td>
-            <td>
-              <img src="{{ r.picture }}" width="100">
-            </td>
-            <td>{{ r.address }}</td>
-            <td>
-              <a href="{{ r.location }}" target="_blank">Map</a>
-            </td>
-            <td>{{ r.cuisine }}</td>
-            <td>{{ r.rating }}</td>
-            <td>
-              <a href="{% url 'admin_restaurant_detail' r.id %}">View</a>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="7">No restaurants added yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <label>Picture URL</label>
+        <input type="text" name="picture">
 
-  </body>
-  </html>
+        <label>Cuisine</label>
+        <input type="text" name="cuisine" required>
+
+        <label>Address</label>
+        <input type="text" name="address" required>
+
+        <label>Location (Google Maps link)</label>
+        <input type="url" name="location" required>
+
+        <label>Rating</label>
+        <input type="number" name="rating" min="1" max="5" step="0.5">
+
+        <br><br>
+        <button type="submit">Add Restaurant</button>
+      </form>
+    </div>
+  </div>
+  <script src="{% static 'delivery/modals.js' %}"></script>
+</body>
+
+</html>

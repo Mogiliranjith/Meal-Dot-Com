@@ -79,10 +79,6 @@ def signin(request):
       "name": user.name
     }
   )
-  
-#opening add restaurants for the admin
-def open_add_restaurant(request):
-  return render(request, 'delivery/add_restaurant.html')
 
 #adding restaurants
 def add_restaurant(request):
@@ -173,10 +169,6 @@ def delete_menu_item(request, item_id):
   return redirect('open_update_menu', restaurant_id=restaurant_id)
 
 
-# opening update restaurant.html link
-def open_update_restaurant(request, restaurant_id):
-  restaurant = Restaurant.objects.get(id = restaurant_id)
-  return render(request, 'delivery/update_restaurant.html', {"restaurant": restaurant})
 # clicking on the update restaurant button
 # def update_restaurant(request, restaurant_id):
 #   restaurant = Restaurant.objects.get(id = restaurant_id)
@@ -223,7 +215,7 @@ def update_restaurant(request, restaurant_id):
   restaurantList = Restaurant.objects.all()
 
   messages.success(request, "Restaurant added successfully.")
-  return redirect('admin_home')
+  return redirect('admin_restaurant_detail', restaurant_id = restaurant.id)
 
 # Clicking on the delete restaurant button inside admin_home.html
 def delete_restaurant(request, restaurant_id):

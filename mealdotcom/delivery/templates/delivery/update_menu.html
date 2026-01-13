@@ -1,18 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
+    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}">
 </head>
+
 <body>
     <!-- show current menu -->
     <h2>Menu Items</h2>
+
+    <!--Button to open add item modal-->
+    <button onclick="openAddMenuModal()">Add Item</button>
+    <!-- ADD MENU ITEM MODAL -->
+    <div id="addMenuModal" class="modal">
+        <div class="modal-content modal-form">
+            <span class="close" onclick="closeAddMenuModal()">&times;</span>
+
+            <h3>Add Menu Item</h3>
+
+            <form action="{% url 'update_menu' restaurant.id %}" method="post">
+                {% csrf_token %}
+
+                <label>Item Name</label>
+                <input type="text" name="name" required>
+
+                <label>Description</label>
+                <textarea name="description" required></textarea>
+
+                <label>Price</label>
+                <input type="number" name="price" step="0.01" required>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" name="vegeterian">
+                    <label>Vegetarian</label>
+                </div>
+
+                <label>Image URL</label>
+                <input type="url" name="picture">
+
+                <br>
+                <button type="submit">Add Item</button>
+            </form>
+        </div>
+    </div>
+
     <div class="card-container">
         {% for item in itemList %}
-         <div class="cards">
+        <div class="cards">
             <img src="{{ item.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ item.name}}">
 
             <h4>{{ item.name }}</h4>
@@ -22,35 +61,15 @@
 
             <form action="{% url 'delete_menu_item' item.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit"
-                        onclick="return confirm('Delete this item?')">
+                <button type="submit" onclick="return confirm('Delete this item?')">
                     Delete
-            </button>
+                </button>
             </form>
-         </div>
+        </div>
         {% endfor %}
     </div>
 
-    <!-- add food item (form) -->
-    <h2>Add Menu Item</h2>
-    <form action="{% url 'update_menu' restaurant.id %}" method="post">
-        {% csrf_token %}
-        <label for="name">Item Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea><br><br>
-
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required><br><br>
-
-        <label for="vegeterian">Vegetarian:</label>
-        <input type="checkbox" id="vegeterian" name="vegeterian"><br><br>
-
-        <label for="picture">Image URL:</label>
-        <input type="url" id="picture" name="picture"><br><br>
-
-        <button type="submit">Add Item</button>
-    </form>
+    <script src="{% static 'delivery/modals.js' %}"></script>
 </body>
+
 </html>
