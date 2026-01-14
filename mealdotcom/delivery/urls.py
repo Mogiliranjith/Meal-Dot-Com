@@ -19,5 +19,5 @@ urlpatterns = [
   # Customer Specific
   path('view_menu/<int:restaurant_id>/<str:name>', views.view_menu, name='view_menu'),
   path('add_to_cart/<int:item_id>/<str:name>', views.add_to_cart, name='add_to_cart'),
-
+  path('show_cart/<str:name>', views.show_cart, name='show_cart'),
 ]

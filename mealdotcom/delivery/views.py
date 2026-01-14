@@ -262,4 +262,9 @@ def add_to_cart(request, item_id, name):
   return HttpResponse('added to cart')
 
 # show cart functionality
-
+def show_cart(request, name):
+    customer = User.objects.get(name = name)
+    cart = Cart.objects.filter(customer=customer).first()
+    items = cart.items.all() if cart else []
+    total_price = cart.total_price() if cart else 0
+    return render(request, 'delivery/cart.html',{"itemList" : items, "total_price" : total_price, "name":name})
