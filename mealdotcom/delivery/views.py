@@ -1,11 +1,10 @@
-from os import name
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
-
 from django.conf import settings
-from .models import Cart, User, Restaurant, Item
 from django.db.models import Q
+
+from .models import Cart, User, Restaurant, Item
 import razorpay
 
 
@@ -304,6 +303,26 @@ def checkout(request, name):
     'razorpay_key_id': settings.RAZORPAY_KEY_ID,
     'order_id': order['id'], # Razorpay order ID
     'amount': total_price,
+  })
+
+# recent orders
+def orders(request, name):
+  customer = get_object_or_404(User, name = name)
+  cart = Cart.objects.filter(customer=customer).first()
+  
+  # Fetch cart items and total price before clearing the cart
+  cart_items = cart.items.all() if cart else[]
+  total_price = cart.total_price() if cart else 0
+  
+  # Clear the cart after fetching its details
+  if cart:
+    cart.items.clear()
+    
+  return render(request, 'delivery/orders.html', {
+    'name': name,
+    'customer': customer,
+    'cart_items': cart_items,
+    'total_price': total_price,
   })
   
 
