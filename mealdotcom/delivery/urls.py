@@ -20,7 +20,8 @@ urlpatterns = [
   path('view_menu/<int:restaurant_id>/<str:name>', views.view_menu, name='view_menu'),
   path('add_to_cart/<int:item_id>/<str:name>', views.add_to_cart, name='add_to_cart'),
   path('show_cart/<str:name>', views.show_cart, name='show_cart'),
-
+  path('checkout/<str:name>/', views.checkout, name='checkout'),
+  
   # Features
   path('live-search/', views.live_search, name='live_search'),
   path('menu-live-search/', views.menu_live_search, name='menu_live_search'),

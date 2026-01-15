@@ -2,8 +2,12 @@ from os import name
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
+
+from django.conf import settings
 from .models import Cart, User, Restaurant, Item
 from django.db.models import Q
+import razorpay
+
 
 # Create your views here.
 def index(request):
@@ -270,6 +274,38 @@ def show_cart(request, name):
   total_price = cart.total_price() if cart else 0
   return render(request, 'delivery/cart.html',{"itemList" : items, "total_price" : total_price, "name":name})
 
+# check out functionality
+def checkout(request, name):
+  customer = get_object_or_404(User, name = name)
+  cart = Cart.objects.filter(customer = customer).first()
+  cart_items = cart.items.all() if cart else []
+  total_price = cart.total_price() if cart else 0
+  
+  if total_price == 0:
+    return render(request, 'delivery/checkout.html', {
+      'error': 'Your cart is empty!',
+    })
+  #Initialize Razorpay client
+  client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+  
+  #Create Razorpay order
+  order_data = {
+    'amount': int(total_price * 100), # Amount in paisa
+    'currency': 'INR',
+    'payment_capture': '1', # Automatically capture payment
+  }
+  order = client.order.create(data = order_data)
+  
+  #Pass the order details to the frontend
+  return render(request, 'delivery/checkout.html', {
+    'name': name,
+    'cart_items': cart_items,
+    'total_price': total_price,
+    'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+    'order_id': order['id'], # Razorpay order ID
+    'amount': total_price,
+  })
+  
 
 
 # FEATURES

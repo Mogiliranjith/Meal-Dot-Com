@@ -116,3 +116,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# RAZOR PAY
+RAZORPAY_KEY_ID = 'rzp_test_S3m1gEXknhORgy'
+RAZORPAY_KEY_SECRET = 'P50UIXEO1sU84NAjkwM65LTK'
