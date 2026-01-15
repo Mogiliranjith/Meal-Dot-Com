@@ -62,8 +62,13 @@
 
     <h3>Menu Items</h3>
 
+    <!--Food search box-->
+    <input type="text" id="adminFoodSearchBox" placeholder="Search menu items..."
+        style="width:300px;padding:8px;margin-bottom:20px;">
+
+
     {% if itemList %}
-    <div class="card-container">
+    <div class="card-container" id="adminMenuContainer">
         {% for item in itemList %}
         <div class="cards">
             <h4>{{ item.name }}</h4>
@@ -89,6 +94,11 @@
     <br>
     <a href="{% url 'admin_home' %}">⬅ Back to Admin Home</a>
     <script src="{% static 'delivery/modals.js' %}"></script>
+    <script>
+        const ADMIN_RESTAURANT_ID = "{{ restaurant.id }}";
+    </script>
+    <script src="{% static 'delivery/ajax.js' %}"></script>
+
 </body>
 
 </html>

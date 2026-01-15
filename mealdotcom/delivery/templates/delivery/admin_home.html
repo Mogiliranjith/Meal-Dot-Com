@@ -24,6 +24,11 @@
   <!-- Button to open add restaurant page -->
   <button onclick="openAddModal()">New Restaurant</button>
 
+  <!--Universal Search for both restaurants and foods-->
+  <input type="text" id="adminSearchBox"
+       placeholder="Search restaurant..."
+       style="width:300px;padding:8px;margin-bottom:15px;">
+
   <br><br>
 
   <!-- Restaurant table (moved from show_restaurant.html) -->
@@ -40,7 +45,7 @@
       </tr>
     </thead>
 
-    <tbody>
+    <tbody id="adminRestaurantTable">
       {% for r in restaurantList %}
       <tr>
         <td>{{ r.name }}</td>
@@ -99,6 +104,8 @@
     </div>
   </div>
   <script src="{% static 'delivery/modals.js' %}"></script>
+  <script src="{% static 'delivery/ajax.js' %}"></script>
+
 </body>
 
 </html>

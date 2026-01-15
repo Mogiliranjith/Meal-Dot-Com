@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,27 +8,57 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
 </head>
-<body>
-    <h3>Welcome {{name}}!</h3>
 
-    <a href="{% url 'show_cart' name %}" > Go to cart</a>
+<body>
+    <h2>Welcome {{name}}!</h2>
+
+    <h3>{{ restaurant.name }}</h3>
+
+    <img src="{{ restaurant.picture }}" width="200"><br><br>
+
+    <p><strong>Address:</strong> {{ restaurant.address }}</p>
+    <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
+    <p><strong>Rating:</strong> {{ restaurant.rating }}</p>
+    <p>
+        <strong>Location:</strong>
+        <a href="{{ restaurant.location }}" target="_blank">Map</a>
+    </p>
+    <hr>
+
+    <!--Food search box-->
+    <input type="text" id="foodSearchBox" placeholder="Search food..."
+        style="width: 300px; padding: 8px; margin-bottom: 20px;">
+
+    <a href="{% url 'show_cart' name %}"> Go to cart</a>
 
     <!-- show current menu -->
-    <div class="card-container">
+    <div class="card-container" id="menuContainer">
+        {% if itemList %}
         {% for item in itemList %}
-            <div class="cards">
-                <img src="{{ item.picture|default:'static/delivery/images/default.jpg' }}" alt="{{ item.name }}">
+        <div class="cards">
+            <img src="{{ item.picture|default:'static/delivery/images/default.jpg' }}" alt="{{ item.name }}">
 
-                <h4>{{ item.name }}</h4>
-                <p>{{ item.description }}</p>
-                <p><strong>Price:</strong> ₹{{ item.price }}</p>
-                <p><strong>Veg:</strong> {{ item.vegeterian }}</p>
+            <h4>{{ item.name }}</h4>
+            <p>{{ item.description }}</p>
+            <p><strong>Price:</strong> ₹{{ item.price }}</p>
+            <p><strong>Veg:</strong> {{ item.vegeterian }}</p>
 
-                <a href="{% url 'add_to_cart' item.id name %}">
-                    Add to cart
-                </a>
-            </div>
+            <a href="{% url 'add_to_cart' item.id name %}">
+                Add to cart
+            </a>
+        </div>
         {% endfor %}
+        {% else %}
+        <p>No items found{% if query %} for "{{ query }}"{% endif %}</p>
+        {% endif %}
     </div>
+
+    <script>
+        const CUSTOMER_NAME = "{{ name }}";
+        const RESTAURANT_ID = "{{ restaurant.id }}";
+    </script>
+    <script src="{% static 'delivery/ajax.js' %}"></script>
+
 </body>
+
 </html>

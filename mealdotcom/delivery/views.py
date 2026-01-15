@@ -1,8 +1,9 @@
 from os import name
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Cart, User, Restaurant, Item
+from django.db.models import Q
 
 # Create your views here.
 def index(request):
@@ -263,8 +264,58 @@ def add_to_cart(request, item_id, name):
 
 # show cart functionality
 def show_cart(request, name):
-    customer = User.objects.get(name = name)
-    cart = Cart.objects.filter(customer=customer).first()
-    items = cart.items.all() if cart else []
-    total_price = cart.total_price() if cart else 0
-    return render(request, 'delivery/cart.html',{"itemList" : items, "total_price" : total_price, "name":name})
+  customer = User.objects.get(name = name)
+  cart = Cart.objects.filter(customer=customer).first()
+  items = cart.items.all() if cart else []
+  total_price = cart.total_price() if cart else 0
+  return render(request, 'delivery/cart.html',{"itemList" : items, "total_price" : total_price, "name":name})
+
+
+
+# FEATURES
+# home page search functionality
+def live_search(request):
+  query = request.GET.get('q', '').strip()
+
+  if not query:
+    restaurants = Restaurant.objects.all()
+  else:
+    restaurants = Restaurant.objects.filter(
+      Q(name__icontains=query) |
+      Q(items__name__icontains=query)
+    ).distinct()
+
+  data = []
+  for r in restaurants:
+      data.append({
+        'id': r.id,
+        'name': r.name,
+        'cuisine': r.cuisine,
+        'rating': r.rating,
+        'picture': r.picture if r.picture else '/static/delivery/images/default.jpg'
+      })
+
+  return JsonResponse({'results': data})
+
+# menu page search funtionality
+def menu_live_search(request):
+  query = request.GET.get('q', '').strip()
+  restaurant_id = request.GET.get('restaurant_id')
+
+  items = Item.objects.filter(restaurant_id=restaurant_id)
+
+  if query:
+    items = items.filter(name__icontains=query)
+
+  data = []
+  for item in items:
+      data.append({
+        'id': item.id,
+        'name': item.name,
+        'description': item.description,
+        'price': item.price,
+        'vegeterian': item.vegeterian,
+        'picture': item.picture if item.picture else '/static/delivery/images/default.jpg'
+      })
+
+  return JsonResponse({'results': data})
