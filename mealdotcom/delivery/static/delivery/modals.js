@@ -24,17 +24,22 @@ function closeAddMenuModal() {
 
 // CLOSE MODAL WHEN CLICKING OUTSIDE THE MODAL WINDOW
 window.onclick = function(event) {
+  const profileModal = this.document.getElementById("profileModal");
   const addModal = this.document.getElementById("addRestaurantModal");
   const updateModal = this.document.getElementById("updateRestaurantModal");
   const addMenuModal = this.document.getElementById("addMenuModal");
 
-  if (event.target === addModal) {
-    addModal.style.display = "none";
-  }
-  if (event.target === updateModal) {
-    updateModal.style.display = "none";
-  }
-  if (event.target === addMenuModal) {
-    addMenuModal.style.display = "none";
-  }
+  if (event.target === profileModal) profileModal.style.display = "none";
+  if (event.target === addModal) addModal.style.display = "none";
+  if (event.target === updateModal) updateModal.style.display = "none";
+  if (event.target === addMenuModal) addMenuModal.style.display = "none";
 };
+
+// CUSTOMER PROFILE MODAL
+function openProfileModal() {
+  document.getElementById("profileModal").style.display = "block";
+}
+
+function closeProfileModal() {
+  document.getElementById("profileModal").style.display = "none";
+}

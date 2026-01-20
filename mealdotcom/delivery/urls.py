@@ -22,6 +22,8 @@ urlpatterns = [
   path('show_cart/<str:name>', views.show_cart, name='show_cart'),
   path('checkout/<str:name>/', views.checkout, name='checkout'),
   path('orders/<str:name>/', views.orders, name='orders'),
+  path('customer_profile/', views.customer_profile, name='customer_profile'),
+  path('customer_logout/', views.customer_logout, name='customer_logout'),
   
   # Features
   path('live-search/', views.live_search, name='live_search'),

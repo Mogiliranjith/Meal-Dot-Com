@@ -74,13 +74,15 @@ def signin(request):
     return admin_home(request)
   
   # Customer login
+  request.session['user_id'] = user.id
   restaurants = Restaurant.objects.all()
   return render(
     request,
     "delivery/customer_home.html",
     {
       "restaurantList": restaurants,
-      "name": user.name
+      "name": user.name,
+      "user": user
     }
   )
 
@@ -328,6 +330,28 @@ def orders(request, name):
 
 
 # FEATURES
+# customer profile feature
+def customer_profile(request):
+  user_id = request.session.get('user_id')
+
+  if not user_id:
+    return redirect('signin')
+
+  user = get_object_or_404(User, id=user_id)
+
+  return render(
+    request,
+    'delivery/customer_profile.html',
+    {
+      'user': user
+    }
+  )
+
+# Customer logout feature
+def customer_logout(request):
+  request.session.flush()
+  return redirect('index')
+
 # home page search functionality
 def live_search(request):
   query = request.GET.get('q', '').strip()

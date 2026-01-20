@@ -1,48 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Customer Home</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
-    <link rel="stylesheet" href="{% static 'delivery/customer_home.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/customer_home.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}">
+  </head>
 
-<body>
+  <body>
     <h3>Welcome {{ name }}!</h3>
 
-    <!--Universal search-->
-    <input type="text" id="searchBox" placeholder="Search restaurant or food..."
-        style="width:300px;padding:8px;margin-bottom:20px;">
+    <div class="navbar">
+      <div class="logo">Meal-Dot-Com</div>
 
+      <div class="profile-wrapper">
+        <div class="profile-icon" id="profileIcon">👤</div>
+
+        <div id="profileMenu" class="profile-menu">
+          <a href="javascript:void(0)" onclick="openProfileModal()">Profile</a>
+          <a href="#">Cart</a>
+          <a href="{% url 'customer_logout' %}">Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <!--Universal search-->
+    <input
+      type="text"
+      id="searchBox"
+      placeholder="Search restaurant or food..."
+      style="width: 300px; padding: 8px; margin-bottom: 20px"
+    />
 
     <div class="card-container" id="restaurantContainer">
-        {% if restaurantList %}
-        {% for r in restaurantList %}
-        <div class="cards">
-            <img src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}" alt="{{ r.name }}">
+      {% if restaurantList %} {% for r in restaurantList %}
+      <div class="cards">
+        <img
+          src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}"
+          alt="{{ r.name }}"
+        />
 
-            <h4>{{ r.name }}</h4>
-            <p><strong>Cuisine:</strong> {{ r.cuisine }}</p>
-            <p><strong>Rating:</strong> {{ r.rating }}</p>
+        <h4>{{ r.name }}</h4>
+        <p><strong>Cuisine:</strong> {{ r.cuisine }}</p>
+        <p><strong>Rating:</strong> {{ r.rating }}</p>
 
-            <a href="{% url 'view_menu' r.id name %}">
-                View Menu
-            </a>
-        </div>
-        {% endfor %}
-        {% else %}
-        <p>No restaurants found for "{{ query }}"</p>
-        {% endif %}
+        <a href="{% url 'view_menu' r.id name %}"> View Menu </a>
+      </div>
+      {% endfor %} {% else %}
+      <p>No restaurants found for "{{ query }}"</p>
+      {% endif %}
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profileModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeProfileModal()">&times;</span>
+
+        <h2>My Profile</h2>
+        <p><strong>Name:</strong> {{ name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+      </div>
     </div>
 
     <script>
-        const CUSTOMER_NAME = "{{ name }}";
+      const CUSTOMER_NAME = "{{ name }}";
     </script>
     <script src="{% static 'delivery/ajax.js' %}"></script>
-
-</body>
-
+    <script src="{% static 'delivery/main.js' %}"></script>
+    <script src="{% static 'delivery/modals.js' %}"></script>
+  </body>
 </html>
