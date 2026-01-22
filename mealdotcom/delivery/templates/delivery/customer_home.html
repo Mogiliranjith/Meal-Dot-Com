@@ -63,6 +63,10 @@
         <p><strong>Name:</strong> {{ name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Phone:</strong> {{ user.phone }}</p>
+        
+        <!--Button to open previouse orders of the customers-->
+        <a href="{% url 'order_history_page' %}" class="orders-btn">My Orders</a>
+        <div id="orderHistory" style="margin-top: 15px;"></div>
       </div>
     </div>
 

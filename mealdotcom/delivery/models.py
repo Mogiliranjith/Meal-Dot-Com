@@ -32,3 +32,20 @@ class Cart(models.Model):
 
     def total_price(self):
         return sum(item.price for item in self.items.all())
+      
+class Order(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    total_price = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.customer.name}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=50)
+    price = models.FloatField()
+
+    def __str__(self):
+        return self.name

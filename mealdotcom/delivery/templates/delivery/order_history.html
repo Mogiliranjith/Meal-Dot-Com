@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Orders</title>
+</head>
+<body>
+
+<h2>My Previous Orders</h2>
+
+{% if orders %}
+  {% for order in orders %}
+    <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+      <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+      <p><strong>Total:</strong> ₹{{ order.total_price }}</p>
+
+      <ul>
+        {% for item in order.items.all %}
+          <li>{{ item.name }} - ₹{{ item.price }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No previous orders found.</p>
+{% endif %}
+
+<a href="{% url 'signin' %}">Back to Home</a>
+
+</body>
+</html>

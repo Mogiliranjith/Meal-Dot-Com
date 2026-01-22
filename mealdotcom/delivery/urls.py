@@ -28,5 +28,6 @@ urlpatterns = [
   # Features
   path('live-search/', views.live_search, name='live_search'),
   path('menu-live-search/', views.menu_live_search, name='menu_live_search'),
-  
+  path("my-orders/", views.order_history_page, name="order_history_page"),
+
 ]

@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.db.models import Q
 
-from .models import Cart, User, Restaurant, Item
+from .models import Cart, Order, OrderItem, User, Restaurant, Item
 import razorpay
 
 
@@ -309,22 +309,31 @@ def checkout(request, name):
 
 # recent orders
 def orders(request, name):
-  customer = get_object_or_404(User, name = name)
+  customer = get_object_or_404(User, name=name)
   cart = Cart.objects.filter(customer=customer).first()
-  
-  # Fetch cart items and total price before clearing the cart
-  cart_items = cart.items.all() if cart else[]
-  total_price = cart.total_price() if cart else 0
-  
-  # Clear the cart after fetching its details
-  if cart:
-    cart.items.clear()
-    
-  return render(request, 'delivery/orders.html', {
-    'name': name,
-    'customer': customer,
-    'cart_items': cart_items,
-    'total_price': total_price,
+
+  if not cart or cart.items.count() == 0:
+    return redirect("signin")
+
+  # Create order
+  order = Order.objects.create(
+    customer=customer,
+    total_price=cart.total_price()
+  )
+
+  # Save ordered items
+  for item in cart.items.all():
+    OrderItem.objects.create(
+      order=order,
+      name=item.name,
+      price=item.price
+    )
+
+  # Clear cart AFTER saving order
+  cart.items.clear()
+
+  return render(request, "delivery/orders.html", {
+    "order": order
   })
   
 
@@ -398,3 +407,16 @@ def menu_live_search(request):
       })
 
   return JsonResponse({'results': data})
+
+# Order History page
+def order_history_page(request):
+  user_id = request.session.get("user_id")
+  if not user_id:
+    return redirect("signin")
+
+  customer = get_object_or_404(User, id=user_id)
+  orders = Order.objects.filter(customer=customer).order_by("-created_at")
+
+  return render(request, "delivery/order_history.html", {
+    "orders": orders
+  })
