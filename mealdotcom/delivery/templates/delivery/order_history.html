@@ -6,6 +6,8 @@
 <body>
 
 <h2>My Previous Orders</h2>
+<a href="{% url 'customer_logout' %}"><button>Logout</button></a>
+
 
 {% if orders %}
   {% for order in orders %}

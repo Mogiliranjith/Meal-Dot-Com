@@ -21,7 +21,7 @@
 
         <div id="profileMenu" class="profile-menu">
           <a href="javascript:void(0)" onclick="openProfileModal()">Profile</a>
-          <a href="#">Cart</a>
+          <a href="{% url 'show_cart' name %}">Cart</a>
           <a href="{% url 'customer_logout' %}">Logout</a>
         </div>
       </div>
