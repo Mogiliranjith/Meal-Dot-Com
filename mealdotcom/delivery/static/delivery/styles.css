@@ -69,9 +69,9 @@ body {
 }
 
 #vegToggle:checked + .veg-switch .switch-thumb {
-  transform: translateX(20px);
+  transform: translateX(21px);
 }
 
 #vegToggle:checked + .veg-switch .switch-label {
-  color: white;
+  color: #2ecc71;
 }

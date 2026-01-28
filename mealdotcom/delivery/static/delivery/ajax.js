@@ -10,18 +10,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // Veg / Non-Veg Toggle
   // =========================
 
-  let vegOnly = false; // OFF by default
+  let vegOnly = localStorage.getItem("vegOnly") === "true";
 
   const vegToggle = document.getElementById("vegToggle");
 
   if (vegToggle) {
+    vegToggle.checked = vegOnly;
+  }
+
+  if (vegToggle) {
     vegToggle.addEventListener("change", () => {
       vegOnly = vegToggle.checked;
+      localStorage.setItem("vegOnly", vegOnly);
       triggerSearch();
     });
   }
 
   function triggerSearch() {
+    if (!searchBox || !restaurantContainer) return;
+
     const query = searchBox.value.trim();
     fetch(`/live-search/?q=${query}&veg=${vegOnly}`)
       .then((res) => res.json())
@@ -54,8 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Initial load (show all restaurants)
-  triggerSearch();
-
+  if (searchBox && restaurantContainer) {
+    triggerSearch();
+  }
+  
   /* =========================
      CUSTOMER MENU: Food Search
      ========================= */
