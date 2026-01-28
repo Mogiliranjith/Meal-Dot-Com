@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +7,8 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
     <link rel="stylesheet" href="{% static 'delivery/customer_home.css' %}" />
-    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}">
+    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/styles.css' %}" />
   </head>
 
   <body>
@@ -15,6 +16,15 @@
 
     <div class="navbar">
       <div class="logo">Meal-Dot-Com</div>
+
+      <!-- Veg / Non-Veg Toggle -->
+      <div class="veg-toggle">
+        <input type="checkbox" id="vegToggle" hidden />
+        <label for="vegToggle" class="veg-switch">
+          <span class="switch-thumb"></span>
+          <span class="switch-label">Veg</span>
+        </label>
+      </div>
 
       <div class="profile-wrapper">
         <div class="profile-icon" id="profileIcon">👤</div>
@@ -63,10 +73,12 @@
         <p><strong>Name:</strong> {{ name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Phone:</strong> {{ user.phone }}</p>
-        
+
         <!--Button to open previouse orders of the customers-->
-        <a href="{% url 'order_history_page' %}" class="orders-btn">My Orders</a>
-        <div id="orderHistory" style="margin-top: 15px;"></div>
+        <a href="{% url 'order_history_page' %}" class="orders-btn"
+          >My Orders</a
+        >
+        <div id="orderHistory" style="margin-top: 15px"></div>
       </div>
     </div>
 

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   /* =========================
      HOME PAGE: Restaurant Search
      ========================= */
@@ -7,34 +6,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchBox = document.getElementById("searchBox");
   const restaurantContainer = document.getElementById("restaurantContainer");
 
-  if (searchBox && restaurantContainer) {
-    searchBox.addEventListener("keyup", () => {
-      const query = searchBox.value.trim();
+  // =========================
+  // Veg / Non-Veg Toggle
+  // =========================
 
-      fetch(`/live-search/?q=${query}`)
-        .then(res => res.json())
-        .then(data => {
-          restaurantContainer.innerHTML = "";
+  let vegOnly = false; // OFF by default
 
-          if (data.results.length === 0) {
-            restaurantContainer.innerHTML = "<p>No restaurants found</p>";
-            return;
-          }
+  const vegToggle = document.getElementById("vegToggle");
 
-          data.results.forEach(r => {
-            restaurantContainer.innerHTML += `
-              <div class="cards">
-                <img src="${r.picture}">
-                <h4>${r.name}</h4>
-                <p><strong>Cuisine:</strong> ${r.cuisine}</p>
-                <p><strong>Rating:</strong> ${r.rating}</p>
-                <a href="/view_menu/${r.id}/${CUSTOMER_NAME}">View Menu</a>
-              </div>
-            `;
-          });
-        });
+  if (vegToggle) {
+    vegToggle.addEventListener("change", () => {
+      vegOnly = vegToggle.checked;
+      triggerSearch();
     });
   }
+
+  function triggerSearch() {
+    const query = searchBox.value.trim();
+    fetch(`/live-search/?q=${query}&veg=${vegOnly}`)
+      .then((res) => res.json())
+      .then(renderRestaurants);
+  }
+
+  function renderRestaurants(data) {
+    restaurantContainer.innerHTML = "";
+
+    if (data.results.length === 0) {
+      restaurantContainer.innerHTML = "<p>No restaurants found</p>";
+      return;
+    }
+
+    data.results.forEach((r) => {
+      restaurantContainer.innerHTML += `
+        <div class="cards">
+          <img src="${r.picture}">
+          <h4>${r.name}</h4>
+          <p><strong>Cuisine:</strong> ${r.cuisine}</p>
+          <p><strong>Rating:</strong> ${r.rating}</p>
+          <a href="/view_menu/${r.id}/${CUSTOMER_NAME}">View Menu</a>
+        </div>
+      `;
+    });
+  }
+
+  if (searchBox && restaurantContainer) {
+    searchBox.addEventListener("keyup", triggerSearch);
+  }
+
+  // Initial load (show all restaurants)
+  triggerSearch();
 
   /* =========================
      CUSTOMER MENU: Food Search
@@ -48,8 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const query = foodSearchBox.value.trim();
 
       fetch(`/menu-live-search/?q=${query}&restaurant_id=${RESTAURANT_ID}`)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           menuContainer.innerHTML = "";
 
           if (data.results.length === 0) {
@@ -57,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          data.results.forEach(item => {
+          data.results.forEach((item) => {
             menuContainer.innerHTML += `
               <div class="cards">
                 <img src="${item.picture}">
@@ -87,8 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const query = adminSearchBox.value.trim();
 
       fetch(`/live-search/?q=${query}`)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           adminTable.innerHTML = "";
 
           if (data.results.length === 0) {
@@ -99,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          data.results.forEach(r => {
+          data.results.forEach((r) => {
             adminTable.innerHTML += `
               <tr>
                 <td>${r.name}</td>
@@ -132,9 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
     adminFoodSearchBox.addEventListener("keyup", () => {
       const query = adminFoodSearchBox.value.trim();
 
-      fetch(`/menu-live-search/?q=${query}&restaurant_id=${ADMIN_RESTAURANT_ID}`)
-        .then(res => res.json())
-        .then(data => {
+      fetch(
+        `/menu-live-search/?q=${query}&restaurant_id=${ADMIN_RESTAURANT_ID}`,
+      )
+        .then((res) => res.json())
+        .then((data) => {
           adminMenuContainer.innerHTML = "";
 
           if (data.results.length === 0) {
@@ -142,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          data.results.forEach(item => {
+          data.results.forEach((item) => {
             adminMenuContainer.innerHTML += `
               <div class="cards">
                 <h4>${item.name}</h4>
@@ -158,5 +180,4 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
-
 });

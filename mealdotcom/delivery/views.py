@@ -364,24 +364,28 @@ def customer_logout(request):
 # home page search functionality
 def live_search(request):
   query = request.GET.get('q', '').strip()
+  veg_only = request.GET.get("veg", "").strip().lower() == "true"  # veg 
 
-  if not query:
-    restaurants = Restaurant.objects.all()
-  else:
-    restaurants = Restaurant.objects.filter(
+  restaurants = Restaurant.objects.all()
+
+  if query:
+    restaurants = restaurants.filter(
       Q(name__icontains=query) |
       Q(items__name__icontains=query)
     ).distinct()
 
+  if veg_only:
+    restaurants = restaurants.filter(cuisine="veg")
+
   data = []
-  for r in restaurants:
-      data.append({
-        'id': r.id,
-        'name': r.name,
-        'cuisine': r.cuisine,
-        'rating': r.rating,
-        'picture': r.picture if r.picture else '/static/delivery/images/default.jpg'
-      })
+  for r in restaurants.distinct():
+    data.append({
+      'id': r.id,
+      'name': r.name,
+      'cuisine': r.cuisine,
+      'rating': r.rating,
+      'picture': r.picture or '/static/delivery/images/default.jpg'
+    })
 
   return JsonResponse({'results': data})
 
