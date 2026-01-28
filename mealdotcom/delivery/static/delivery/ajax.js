@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       vegOnly = vegToggle.checked;
       localStorage.setItem("vegOnly", vegOnly);
       triggerSearch();
+      triggerAdminSearch();
     });
   }
 
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (searchBox && restaurantContainer) {
     triggerSearch();
   }
-  
+
   /* =========================
      CUSTOMER MENU: Food Search
      ========================= */
@@ -111,42 +112,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminSearchBox = document.getElementById("adminSearchBox");
   const adminTable = document.getElementById("adminRestaurantTable");
 
-  if (adminSearchBox && adminTable) {
-    adminSearchBox.addEventListener("keyup", () => {
-      const query = adminSearchBox.value.trim();
+  function triggerAdminSearch() {
+    if (!adminSearchBox || !adminTable) return;
 
-      fetch(`/live-search/?q=${query}`)
-        .then((res) => res.json())
-        .then((data) => {
-          adminTable.innerHTML = "";
+    const query = adminSearchBox.value.trim();
 
-          if (data.results.length === 0) {
-            adminTable.innerHTML = `
-              <tr>
-                <td colspan="7">No restaurants found</td>
-              </tr>`;
-            return;
-          }
+    fetch(`/live-search/?q=${query}&veg=${vegOnly}`)
+      .then((res) => res.json())
+      .then((data) => {
+        adminTable.innerHTML = "";
 
-          data.results.forEach((r) => {
-            adminTable.innerHTML += `
-              <tr>
-                <td>${r.name}</td>
-                <td><img src="${r.picture}" width="80"></td>
-                <td>${r.address ?? "-"}</td>
-                <td><a href="${r.location ?? "#"}" target="_blank">Map</a></td>
-                <td>${r.cuisine}</td>
-                <td>${r.rating}</td>
-                <td>
-                  <a href="/admin_restaurant_detail/${r.id}/">
-                    <button>View</button>
-                  </a>
-                </td>
-              </tr>
-            `;
-          });
+        if (data.results.length === 0) {
+          adminTable.innerHTML = `
+          <tr>
+            <td colspan="7">No restaurants found</td>
+          </tr>`;
+          return;
+        }
+
+        data.results.forEach((r) => {
+          adminTable.innerHTML += `
+          <tr>
+            <td>${r.name}</td>
+            <td><img src="${r.picture}" width="80"></td>
+            <td>${r.address ?? "-"}</td>
+            <td><a href="${r.location ?? "#"}" target="_blank">Map</a></td>
+            <td>${r.cuisine}</td>
+            <td>${r.rating}</td>
+            <td>
+              <a href="/admin_restaurant_detail/${r.id}/">
+                <button>View</button>
+              </a>
+            </td>
+          </tr>
+        `;
         });
-    });
+      });
+  }
+
+  if (adminSearchBox && adminTable) {
+    adminSearchBox.addEventListener("keyup", triggerAdminSearch);
+    triggerAdminSearch();
   }
 
   /* =========================
