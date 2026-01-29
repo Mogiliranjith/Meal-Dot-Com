@@ -29,5 +29,8 @@ urlpatterns = [
   path('live-search/', views.live_search, name='live_search'),
   path('menu-live-search/', views.menu_live_search, name='menu_live_search'),
   path("my-orders/", views.order_history_page, name="order_history_page"),
+  path("cart/increase/<int:item_id>/<str:name>/", views.cart_increase, name="cart_increase"),
+  path("cart/decrease/<int:item_id>/<str:name>/", views.cart_decrease, name="cart_decrease"),
+  path("cart/delete/<int:item_id>/<str:name>/", views.cart_delete, name="cart_delete"),
 
 ]

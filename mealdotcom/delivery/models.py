@@ -27,12 +27,32 @@ class Item(models.Model):
   picture = models.URLField(max_length = 400, default='https://www.indiafilings.com/learn/wp-content/uploads/2024/08/How-to-Start-Food-Business.jpg')
 
 class Cart(models.Model):
-    customer = models.ForeignKey(User, on_delete = models.CASCADE, related_name = "cart")
-    items = models.ManyToManyField("Item", related_name = "carts")
+  customer = models.OneToOneField(
+    User,
+    on_delete=models.CASCADE,
+    related_name="cart"
+  )
 
-    def total_price(self):
-        return sum(item.price for item in self.items.all())
-      
+  def total_price(self):
+    return sum(
+      ci.item.price * ci.quantity
+      for ci in self.items.all()
+    )
+
+
+class CartItem(models.Model):
+  cart = models.ForeignKey(
+    Cart,
+    related_name="items",
+    on_delete=models.CASCADE
+  )
+  item = models.ForeignKey(Item, on_delete=models.CASCADE)
+  quantity = models.PositiveIntegerField(default=1)
+
+  class Meta:
+    unique_together = ("cart", "item")
+
+
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     total_price = models.FloatField()

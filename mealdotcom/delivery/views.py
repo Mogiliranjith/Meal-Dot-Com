@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from django.db.models import Q
 
-from .models import Cart, Order, OrderItem, User, Restaurant, Item
+from .models import Cart, Order, OrderItem, User, Restaurant, Item, CartItem
 import razorpay
 
 
@@ -247,6 +247,7 @@ def admin_restaurant_detail(request, restaurant_id):
 
 
 
+
 # CUSTOMER SPECIFIC
 #Customer view menu 
 def view_menu(request, restaurant_id, name):
@@ -261,19 +262,27 @@ def view_menu(request, restaurant_id, name):
 
 # add to cart show
 def add_to_cart(request, item_id, name):
-  item = Item.objects.get(id = item_id)
-  customer = User.objects.get(name = name)
-  cart, created = Cart.objects.get_or_create(customer = customer)
-  cart.items.add(item)
-  return HttpResponse('added to cart')
+  customer = get_object_or_404(User, name=name)
+  item =get_object_or_404(Item, id=item_id)
+  cart, _ = Cart.objects.get_or_create(customer=customer)
+  cart_item, created = CartItem.objects.get_or_create(
+    cart=cart,
+    item=item
+  )
+  
+  if not created:
+    cart_item.quantity += 1
+    cart_item.save()
+  
+  return redirect(request.META.get("HTTP_REFERER", "/"))
 
 # show cart functionality
 def show_cart(request, name):
   customer = User.objects.get(name = name)
   cart = Cart.objects.filter(customer=customer).first()
-  items = cart.items.all() if cart else []
+  cart_items = cart.items.all() if cart else []
   total_price = cart.total_price() if cart else 0
-  return render(request, 'delivery/cart.html',{"itemList" : items, "total_price" : total_price, "name":name})
+  return render(request, 'delivery/cart.html',{"cart_items" : cart_items, "total_price" : total_price, "name":name})
 
 # check out functionality
 def checkout(request, name):
@@ -322,15 +331,15 @@ def orders(request, name):
   )
 
   # Save ordered items
-  for item in cart.items.all():
+  for ci in cart.items.all():
     OrderItem.objects.create(
       order=order,
-      name=item.name,
-      price=item.price
+      name=ci.item.name,
+      price=ci.item.price * ci.quantity
     )
 
   # Clear cart AFTER saving order
-  cart.items.clear()
+  cart.items.all().delete()
 
   return render(request, "delivery/orders.html", {
     "order": order
@@ -424,3 +433,37 @@ def order_history_page(request):
   return render(request, "delivery/order_history.html", {
     "orders": orders
   })
+
+# Cart item increment
+def cart_increase(request, item_id, name):
+  customer = User.objects.get(name=name)
+  cart = Cart.objects.get(customer=customer)
+  cart_item = CartItem.objects.get(cart=cart, item_id=item_id)
+
+  cart_item.quantity += 1
+  cart_item.save()
+
+  return redirect("show_cart", name=name)
+
+# Cart item decrement
+def cart_decrease(request, item_id, name):
+  customer = User.objects.get(name=name)
+  cart = Cart.objects.get(customer=customer)
+  cart_item = CartItem.objects.get(cart=cart, item_id=item_id)
+
+  if cart_item.quantity > 1:
+    cart_item.quantity -= 1
+    cart_item.save()
+  else:
+    cart_item.delete()
+
+  return redirect("show_cart", name=name)
+
+# Cart item delete
+def cart_delete(request, item_id, name):
+  customer = User.objects.get(name=name)
+  cart = Cart.objects.get(customer=customer)
+
+  CartItem.objects.filter(cart=cart, item_id=item_id).delete()
+
+  return redirect("show_cart", name=name)

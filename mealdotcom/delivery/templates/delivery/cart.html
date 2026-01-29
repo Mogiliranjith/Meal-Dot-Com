@@ -1,40 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
     <title>Cart</title>
-</head>
-<body>
-    Hello {{name}}
-    <a href="{% url 'customer_logout' %}"><button>Logout</button></a>
+  </head>
+  <body>
+    Hello {{ name }}
+    <a href="{% url 'customer_logout' %}">
+      <button>Logout</button>
+    </a>
 
-    <!-- show current menu -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%  for item in itemList %}
-                <tr>
-                    <td>
-                        <img src="{{ item.picture }}">
-                    </td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.price }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        <h2>Total price : {{total_price}}</h2>
-        <form action="{% url 'checkout' name %}">
-            <input type="submit" value="CHECK OUT" />
-        </form>
+    <!-- TOTAL + CHECKOUT (TOP) -->
+    <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc">
+      <h2 style="display: inline-block; margin-right: 20px">
+        Total price: ₹ {{ total_price }}
+      </h2>
+
+      <form action="{% url 'checkout' name %}" style="display: inline-block">
+        <button type="submit" style="padding: 8px 16px; font-size: 16px">
+          CHECK OUT
+        </button>
+      </form>
+    </div>
+
+    <table border="1" width="100%" cellpadding="10">
+      <thead>
+        <tr>
+          <th>Item & Quantity</th>
+          <th>Price</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for ci in cart_items %}
+        <tr>
+          <!-- ITEM + QUANTITY COMBINED -->
+          <td>
+            <div style="display: flex; align-items: center; gap: 15px">
+              <!-- ITEM IMAGE -->
+              <img src="{{ ci.item.picture }}" width="80" />
+
+              <!-- ITEM DETAILS -->
+              <div>
+                <strong>{{ ci.item.name }}</strong><br />
+                {{ ci.item.description }}<br /><br />
+
+                <!-- QUANTITY CONTROLS -->
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 5px;
+                  "
+                >
+                  <a
+                    href="{% url 'cart_decrease' ci.item.id name %}"
+                    style="font-size: 20px; text-decoration: none"
+                  >
+                    −
+                  </a>
+
+                  <span
+                    style="
+                      min-width: 30px;
+                      text-align: center;
+                      font-weight: bold;
+                      border: 1px solid #ccc;
+                      padding: 4px 8px;
+                    "
+                  >
+                    {{ ci.quantity }}
+                  </span>
+
+                  <a
+                    href="{% url 'cart_increase' ci.item.id name %}"
+                    style="font-size: 20px; text-decoration: none"
+                  >
+                    +
+                  </a>
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <!-- PRICE -->
+          <td>
+            ₹ {{ ci.item.price }} × {{ ci.quantity }}<br />
+            <strong>
+              ₹ {{ ci.item.price|floatformat:2|add:"0"|floatformat:2 }}
+            </strong>
+          </td>
+
+          <!-- REMOVE -->
+          <td align="center">
+            <a href="{% url 'cart_delete' ci.item.id name %}">❌</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" align="center">Your cart is empty</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-</body>
+  </body>
 </html>
