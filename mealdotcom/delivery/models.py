@@ -49,8 +49,13 @@ class CartItem(models.Model):
   item = models.ForeignKey(Item, on_delete=models.CASCADE)
   quantity = models.PositiveIntegerField(default=1)
 
+  @property
+  def total_price(self):
+    return self.item.price * self.quantity
+
   class Meta:
     unique_together = ("cart", "item")
+
 
 
 class Order(models.Model):
