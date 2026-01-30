@@ -1,65 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ restaurant.name}} | Menu</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/customer_menu.css' %}" />
+  </head>
 
-<body>
-    <h2>Welcome {{name}}!</h2>
+  <body>
+    <!-- ================= HERO SECTION ================= -->
+    <section class="restaurant-hero">
+      <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}" />
 
-    <h3>{{ restaurant.name }}</h3>
+      <div class="hero-overlay">
+        <h1>{{ restaurant.name }}</h1>
+        <p>{{ restaurant.address }}</p>
+        <p>
+          <strong>{{ restaurant.cuisine }}</strong> · ⭐ {{ restaurant.rating }}
+        </p>
+        <a href="{{ restaurant.location }}" target="_blank">View on Map</a>
+      </div>
+    </section>
 
-    <img src="{{ restaurant.picture }}" width="200"><br><br>
+    <!-- ================= MENU SECTION ================= -->
+    <section class="menu-section">
+      <!-- TOP BAR -->
+      <div class="menu-top-bar">
+        <input type="text" id="foodSearchBox" placeholder="Search food..." />
 
-    <p><strong>Address:</strong> {{ restaurant.address }}</p>
-    <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
-    <p><strong>Rating:</strong> {{ restaurant.rating }}</p>
-    <p>
-        <strong>Location:</strong>
-        <a href="{{ restaurant.location }}" target="_blank">Map</a>
-    </p>
-    <hr>
-
-    <!--Food search box-->
-    <input type="text" id="foodSearchBox" placeholder="Search food..."
-        style="width: 300px; padding: 8px; margin-bottom: 20px;">
-
-    <a href="{% url 'show_cart' name %}"> Go to cart</a>
-    <a href="{% url 'customer_logout' %}"><button>Logout</button></a>
-
-    <!-- show current menu -->
-    <div class="card-container" id="menuContainer">
-        {% if itemList %}
-        {% for item in itemList %}
-        <div class="cards">
-            <img src="{{ item.picture|default:'static/delivery/images/default.jpg' }}" alt="{{ item.name }}">
-
-            <h4>{{ item.name }}</h4>
-            <p>{{ item.description }}</p>
-            <p><strong>Price:</strong> ₹{{ item.price }}</p>
-            <p><strong>Veg:</strong> {{ item.vegeterian }}</p>
-
-            <a href="{% url 'add_to_cart' item.id name %}">
-                Add to cart
-            </a>
+        <div class="menu-actions">
+          <a href="{% url 'show_cart' name %}">🛒 Cart</a>
+          <a href="{% url 'customer_logout' %}">Logout</a>
         </div>
-        {% endfor %}
-        {% else %}
-        <p>No items found{% if query %} for "{{ query }}"{% endif %}</p>
+      </div>
+
+      <!-- MENU ITEMS -->
+      <div class="card-container" id="menuContainer">
+        {% if itemList %} {% for item in itemList %}
+        <div class="cards">
+          <img
+            src="{{ item.picture|default:'static/delivery/images/default.jpg' }}"
+            alt="{{ item.name }}"
+          />
+          <h4>{{ item.name }}</h4>
+          <p>{{ item.description }}</p>
+          <p><strong>₹ {{ item.price }}</strong></p>
+          <a href="{% url 'add_to_cart' item.id name %}">Add to cart</a>
+        </div>
+        {% endfor %} {% else %}
+        <p>No items available</p>
         {% endif %}
-    </div>
+      </div>
+    </section>
 
     <script>
-        const CUSTOMER_NAME = "{{ name }}";
-        const RESTAURANT_ID = "{{ restaurant.id }}";
+      const CUSTOMER_NAME = "{{ name }}";
+      const RESTAURANT_ID = "{{ restaurant.id }}";
     </script>
     <script src="{% static 'delivery/ajax.js' %}"></script>
-
-</body>
-
+    <script src="{% static 'delivery/customer_menu.js' %}"></script>
+  </body>
 </html>
