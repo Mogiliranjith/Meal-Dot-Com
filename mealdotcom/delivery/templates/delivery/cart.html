@@ -26,78 +26,83 @@
     <table border="1" width="100%" cellpadding="10">
       <thead>
         <tr>
-          <th>Item & Quantity</th>
-          <th>Price</th>
-          <th>Remove</th>
+          <th width="50%">Item</th>
+          <th width="25%">Quantity</th>
+          <th width="25%">Price</th>
         </tr>
       </thead>
 
       <tbody>
         {% for ci in cart_items %}
         <tr>
-          <!-- ITEM + QUANTITY COMBINED -->
+          <!-- COLUMN 1: ITEM -->
           <td>
             <div style="display: flex; align-items: center; gap: 15px">
-              <!-- ITEM IMAGE -->
               <img src="{{ ci.item.picture }}" width="80" />
 
-              <!-- ITEM DETAILS -->
               <div>
                 <strong>{{ ci.item.name }}</strong><br />
-                {{ ci.item.description }}<br /><br />
-
-                <!-- QUANTITY CONTROLS -->
-                <div
-                  style="
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    margin-top: 5px;
-                  "
-                >
-                  <a
-                    href="{% url 'cart_decrease' ci.item.id name %}"
-                    style="font-size: 20px; text-decoration: none"
-                  >
-                    −
-                  </a>
-
-                  <span
-                    style="
-                      min-width: 30px;
-                      text-align: center;
-                      font-weight: bold;
-                      border: 1px solid #ccc;
-                      padding: 4px 8px;
-                    "
-                  >
-                    {{ ci.quantity }}
-                  </span>
-
-                  <a
-                    href="{% url 'cart_increase' ci.item.id name %}"
-                    style="font-size: 20px; text-decoration: none"
-                  >
-                    +
-                  </a>
-                </div>
+                {{ ci.item.description }}
               </div>
             </div>
           </td>
 
-          <!-- PRICE -->
-          <td>
-            ₹ {{ ci.item.price }} × {{ ci.quantity }}<br />
-            <strong>
-              ₹ {{ ci.item.price|floatformat:2|add:"0"|floatformat:2 }}
-            </strong>
+          <!-- COLUMN 2: QUANTITY + DELETE -->
+          <td align="center">
+            <div
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+              "
+            >
+              <a
+                href="{% url 'cart_decrease' ci.item.id name %}"
+                style="font-size: 22px; text-decoration: none"
+                >−</a
+              >
+
+              <span
+                style="
+                  min-width: 30px;
+                  text-align: center;
+                  font-weight: bold;
+                  border: 1px solid #ccc;
+                  padding: 4px 8px;
+                "
+              >
+                {{ ci.quantity }}
+              </span>
+
+              <a
+                href="{% url 'cart_increase' ci.item.id name %}"
+                style="font-size: 22px; text-decoration: none"
+                >+</a
+              >
+
+              <!-- TRASH ICON -->
+              <a
+                href="{% url 'cart_delete' ci.item.id name %}"
+                style="
+                  font-size: 20px;
+                  margin-left: 10px;
+                  text-decoration: none;
+                "
+                title="Remove item"
+              >
+                🗑️
+              </a>
+            </div>
           </td>
 
-          <!-- REMOVE -->
+          <!-- COLUMN 3: PRICE -->
           <td align="center">
-            <a href="{% url 'cart_delete' ci.item.id name %}">❌</a>
+            ₹ {{ ci.item.price }} × {{ ci.quantity }}<br />
+            <strong>₹ {{ ci.subtotal }}</strong>
           </td>
         </tr>
+
         {% empty %}
         <tr>
           <td colspan="3" align="center">Your cart is empty</td>

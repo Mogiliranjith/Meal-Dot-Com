@@ -282,6 +282,10 @@ def show_cart(request, name):
   cart = Cart.objects.filter(customer=customer).first()
   cart_items = cart.items.all() if cart else []
   total_price = cart.total_price() if cart else 0
+  
+  for ci in cart_items:
+    ci.subtotal = ci.item.price * ci.quantity
+    
   return render(request, 'delivery/cart.html',{"cart_items" : cart_items, "total_price" : total_price, "name":name})
 
 # check out functionality
