@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const menuTopBar = document.querySelector(".menu-top-bar");
+  if (!menuTopBar) return;
   const hero = document.getElementById("heroSection");
   const menuSection = document.getElementById("menuSection");
 

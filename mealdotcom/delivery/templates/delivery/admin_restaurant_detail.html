@@ -1,104 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Restaurant Details</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}">
-    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/modals.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/customer_menu.css' %}" />
+  </head>
 
-<body>
+  <body>
+    <section class="restaurant-hero" id="heroSection">
+      <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}" />
 
-    <h2>{{ restaurant.name }}</h2>
+      <div class="hero-overlay">
+        <h1>{{ restaurant.name }}</h1>
+        <p>{{ restaurant.address }}</p>
+        <p>
+          <strong>{{ restaurant.cuisine }}</strong> · ⭐ {{ restaurant.rating }}
+        </p>
+        <a href="{{ restaurant.location }}" target="_blank">View on Map</a>
+      </div>
+    </section>
 
-    <img src="{{ restaurant.picture }}" width="200"><br><br>
+    <hr />
 
-    <p><strong>Address:</strong> {{ restaurant.address }}</p>
-    <p><strong>Cuisine:</strong> {{ restaurant.cuisine }}</p>
-    <p><strong>Rating:</strong> {{ restaurant.rating }}</p>
-    <p>
-        <strong>Location:</strong>
-        <a href="{{ restaurant.location }}" target="_blank">Map</a>
-    </p>
+    <section class="menu-section" id="menuSection">
+      <!-- ADMIN TOP BAR (sticky) -->
+      <div class="menu-top-bar">
+        <input
+          type="text"
+          id="adminFoodSearchBox"
+          placeholder="Search menu items..."
+        />
 
-    <hr>
-
-    <h3>Actions</h3>
-    <button onclick="openUpdateModal()">Update</button> |
-    <a href="{% url 'delete_restaurant' restaurant.id %}">Delete</a> |
-    <a href="{% url 'open_update_menu' restaurant.id %}">Manage Menu</a>
-
-    <!-- Update Restaurant Modal -->
-    <div id="updateRestaurantModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeUpdateModal()">&times;</span>
-
-            <h3>Update Restaurant</h3>
-
-            <form action="{% url 'update_restaurant' restaurant.id %}" method="post">
-                {% csrf_token %}
-
-                <label>Restaurant Name</label>
-                <input type="text" name="name" value="{{ restaurant.name }}" required>
-
-                <label>Picture URL</label>
-                <input type="text" name="picture" value="{{ restaurant.picture }}">
-
-                <label>Cuisine</label>
-                <input type="text" name="cuisine" value="{{ restaurant.cuisine }}" required>
-
-                <label>Rating</label>
-                <input type="number" name="rating" min="0" max="5" step="0.5" value="{{ restaurant.rating }}">
-
-                <br><br>
-                <button type="submit">Update Restaurant</button>
-            </form>
+        <div class="menu-actions">
+          <button onclick="openUpdateModal()">Update</button>
+          <a href="{% url 'delete_restaurant' restaurant.id %}">Delete</a>
+          <a href="{% url 'open_update_menu' restaurant.id %}">Manage Menu</a>
         </div>
-    </div>
+      </div>
 
-    <hr>
-
-    <h3>Menu Items</h3>
-
-    <!--Food search box-->
-    <input type="text" id="adminFoodSearchBox" placeholder="Search menu items..."
-        style="width:300px;padding:8px;margin-bottom:20px;">
-
-
-    {% if itemList %}
-    <div class="card-container" id="adminMenuContainer">
+      <!-- MENU ITEMS -->
+      {% if itemList %}
+      <div class="card-container" id="adminMenuContainer">
         {% for item in itemList %}
         <div class="cards">
-            <h4>{{ item.name }}</h4>
+          <h4>{{ item.name }}</h4>
+          <p><strong>Price:</strong> ₹{{ item.price }}</p>
+          <p>
+            <strong>Type:</strong> {{ item.vegeterian|yesno:"Veg,Non-Veg" }}
+          </p>
 
-            <p><strong>Price:</strong> ₹{{ item.price }}</p>
-            <p><strong>Type:</strong> {{ item.vegeterian|yesno:"Veg,Non-Veg" }}</p>
+          {% if item.picture %}
+          <img src="{{ item.picture }}" alt="{{ item.name }}" />
+          {% endif %}
 
-            {% if item.picture %}
-            <img src="{{ item.picture }}" alt="{{ item.name }}">
-            {% endif %}
-
-            <form action="{% url 'delete_menu_item' item.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="delete-btn">Delete</button>
-            </form>
+          <form action="{% url 'delete_menu_item' item.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
         </div>
         {% endfor %}
-    </div>
-    {% else %}
-    <p>No menu items added yet.</p>
-    {% endif %}
+      </div>
+      {% else %}
+      <p>No menu items added yet.</p>
+      {% endif %}
+    </section>
 
-    <br>
+    <hr />
+
+    <br />
     <a href="{% url 'admin_home' %}">⬅ Back to Admin Home</a>
     <script src="{% static 'delivery/modals.js' %}"></script>
     <script>
-        const ADMIN_RESTAURANT_ID = "{{ restaurant.id }}";
+      const ADMIN_RESTAURANT_ID = "{{ restaurant.id }}";
     </script>
     <script src="{% static 'delivery/ajax.js' %}"></script>
-
-</body>
-
+    <script src="{% static 'delivery/customer_menu.js' %}"></script>
+  </body>
 </html>
