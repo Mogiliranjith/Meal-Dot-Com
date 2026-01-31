@@ -4,10 +4,14 @@ body {
   font-family: Arial, sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* ================= HERO ================= */
 .restaurant-hero {
   position: relative;
-  height: 65vh; /* 👈 allows menu peek */
+  height: 65vh; /*  allows menu peek */
   width: 100%;
   overflow: hidden;
 }
@@ -94,4 +98,8 @@ body {
 
 .menu-top-bar.scrolled {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#menuSection {
+  scroll-margin-top: 80px;
 }
