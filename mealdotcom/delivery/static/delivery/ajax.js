@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       vegOnly = vegToggle.checked;
       localStorage.setItem("vegOnly", vegOnly);
       triggerSearch();
+      triggerMenuSearch();
       triggerAdminSearch();
     });
   }
@@ -73,36 +74,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const foodSearchBox = document.getElementById("foodSearchBox");
   const menuContainer = document.getElementById("menuContainer");
 
-  if (foodSearchBox && menuContainer) {
-    foodSearchBox.addEventListener("keyup", () => {
-      const query = foodSearchBox.value.trim();
+  function triggerMenuSearch() {
+    if (!foodSearchBox || !menuContainer) return;
 
-      fetch(`/menu-live-search/?q=${query}&restaurant_id=${RESTAURANT_ID}`)
-        .then((res) => res.json())
-        .then((data) => {
-          menuContainer.innerHTML = "";
+    const query = foodSearchBox.value.trim();
 
-          if (data.results.length === 0) {
-            menuContainer.innerHTML = "<p>No items found</p>";
-            return;
-          }
+    fetch(
+      `/menu-live-search/?q=${query}&restaurant_id=${RESTAURANT_ID}&veg=${vegOnly}`,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        menuContainer.innerHTML = "";
 
-          data.results.forEach((item) => {
-            menuContainer.innerHTML += `
-              <div class="cards">
-                <img src="${item.picture}">
-                <h4>${item.name}</h4>
-                <p>${item.description}</p>
-                <p><strong>Price:</strong> ₹${item.price}</p>
-                <p><strong>Veg:</strong> ${item.vegeterian}</p>
-                <a href="/add_to_cart/${item.id}/${CUSTOMER_NAME}">
-                  Add to cart
-                </a>
-              </div>
-            `;
-          });
+        if (data.results.length === 0) {
+          menuContainer.innerHTML = "<p>No items found</p>";
+          return;
+        }
+
+        data.results.forEach((item) => {
+          menuContainer.innerHTML += `
+          <div class="cards">
+            <img src="${item.picture}">
+            <h4>${item.name}</h4>
+            <p>${item.description}</p>
+            <p><strong>₹ ${item.price}</strong></p>
+            <a href="/add_to_cart/${item.id}/${CUSTOMER_NAME}">
+              Add to cart
+            </a>
+          </div>
+        `;
         });
-    });
+      });
   }
 
   /* =========================
@@ -148,6 +150,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         });
       });
+  }
+
+  if (foodSearchBox && menuContainer) {
+    foodSearchBox.addEventListener("keyup", triggerMenuSearch);
+    triggerMenuSearch(); // initial load
   }
 
   if (adminSearchBox && adminTable) {

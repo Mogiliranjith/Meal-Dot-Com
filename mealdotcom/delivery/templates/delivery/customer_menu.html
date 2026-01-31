@@ -7,6 +7,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
     <link rel="stylesheet" href="{% static 'delivery/customer_menu.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
   </head>
 
   <body>
@@ -29,6 +30,15 @@
       <!-- TOP BAR -->
       <div class="menu-top-bar">
         <input type="text" id="foodSearchBox" placeholder="Search food..." />
+
+        <!-- Veg Toggle -->
+         <div class="veg-toggle">
+          <input type="checkbox" id="vegToggle" hidden/>
+          <label for="vegToggle" class="veg-switch">
+            <span class="switch-thumb"></span>
+            <span class="switch-label">Veg</span>
+          </label>
+         </div>
 
         <div class="menu-actions">
           <a href="{% url 'show_cart' name %}">🛒 Cart</a>

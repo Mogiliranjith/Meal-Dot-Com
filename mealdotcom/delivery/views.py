@@ -407,7 +407,10 @@ def menu_live_search(request):
   query = request.GET.get('q', '').strip()
   restaurant_id = request.GET.get('restaurant_id')
 
+  veg_only = request.GET.get("veg", "").lower() == "true"
   items = Item.objects.filter(restaurant_id=restaurant_id)
+  if veg_only:
+    items = items.filter(vegeterian=True)
 
   if query:
     items = items.filter(name__icontains=query)
