@@ -12,38 +12,46 @@
   </head>
 
   <body>
-    <h3>Welcome {{ name }}!</h3>
+    <h3 class="welcome-text">Welcome {{ name }}!</h3>
 
     <div class="navbar">
-      <div class="logo">Meal-Dot-Com</div>
-
-      <!-- Veg Toggle -->
-      <div class="veg-toggle">
-        <input type="checkbox" id="vegToggle" hidden />
-        <label for="vegToggle" class="veg-switch">
-          <span class="switch-thumb"></span>
-          <span class="switch-label">Veg</span>
-        </label>
+      <div class="nav-left">
+        <div class="logo">Meal-Dot-Com</div>
       </div>
 
-      <div class="profile-wrapper">
-        <div class="profile-icon" id="profileIcon">👤</div>
+      <!--Universal search-->
+      <div class="nav-center">
+        <input
+          type="text"
+          id="searchBox"
+          placeholder="Search restaurant or food..."
+        />
 
-        <div id="profileMenu" class="profile-menu">
-          <a href="javascript:void(0)" onclick="openProfileModal()">Profile</a>
-          <a href="{% url 'show_cart' name %}">Cart</a>
-          <a href="{% url 'customer_logout' %}">Logout</a>
+        <!-- Veg Toggle -->
+        <div class="veg-toggle">
+          <input type="checkbox" id="vegToggle" hidden />
+          <label for="vegToggle" class="veg-switch">
+            <span class="switch-thumb"></span>
+            <span class="switch-label">Veg</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Profile -->
+      <div class="nav-right">
+        <div class="profile-wrapper">
+          <div class="profile-icon" id="profileIcon">👤</div>
+
+          <div id="profileMenu" class="profile-menu">
+            <a href="javascript:void(0)" onclick="openProfileModal()"
+              >Profile</a
+            >
+            <a href="{% url 'show_cart' name %}">Cart</a>
+            <a href="{% url 'customer_logout' %}">Logout</a>
+          </div>
         </div>
       </div>
     </div>
-
-    <!--Universal search-->
-    <input
-      type="text"
-      id="searchBox"
-      placeholder="Search restaurant or food..."
-      style="width: 300px; padding: 8px; margin-bottom: 20px"
-    />
 
     <div class="card-container" id="restaurantContainer">
       {% if restaurantList %} {% for r in restaurantList %}

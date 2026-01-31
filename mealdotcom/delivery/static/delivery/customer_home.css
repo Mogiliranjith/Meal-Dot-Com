@@ -1,3 +1,8 @@
+/* Welcome text */
+.welcome-text {
+  margin: 16px 30px;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -5,10 +10,41 @@
   padding: 12px 30px;
   background: #fc8019;
   color: white;
-  position: relative;
-  z-index: 1000;
 }
 
+.nav-left {
+  flex: 1;
+}
+
+.nav-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+#searchBox {
+  width: 420px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
 
 .profile-wrapper {
   position: relative;
