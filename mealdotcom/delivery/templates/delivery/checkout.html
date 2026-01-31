@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/tables.css' %}" />
   </head>
   <body>
     <h1>Checkout</h1>
@@ -14,32 +15,34 @@
     {% if error %}
     <p style="color: red">{{ error }}</p>
     {% else %}
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for ci in cart_items %}
-        <tr>
-          <td>{{ ci.item.name }} × {{ ci.quantity }}</td>
-          <td>
-            ₹ {{ ci.total_price|floatformat:2 }}
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="2">Your cart is empty</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class="table-ui">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ci in cart_items %}
+          <tr>
+            <td>{{ ci.item.name }} × {{ ci.quantity }}</td>
+            <td class="price">₹ {{ ci.total_price|floatformat:2 }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="2" class="table-empty">Your cart is empty</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     <h3>Total: ₹{{ total_price }}</h3>
 
-    <button id="rzp-button">Pay Now</button>
+    <button id="rzp-button" class="btn-primary">Pay Now</button>
     {% endif %}
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
       var options = {

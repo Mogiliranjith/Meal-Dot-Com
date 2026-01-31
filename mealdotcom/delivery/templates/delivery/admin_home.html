@@ -7,6 +7,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'delivery/styles.css' %}" />
     <link rel="stylesheet" href="{% static 'delivery/modals.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/tables.css' %}" />
   </head>
 
   <body>
@@ -39,48 +40,54 @@
     <br /><br />
 
     <!-- Restaurant table (moved from show_restaurant.html) -->
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Restaurant name</th>
-          <th>Picture</th>
-          <th>Address</th>
-          <th>Location</th>
-          <th>Cuisine</th>
-          <th>Rating</th>
-          <th>Operations</th>
-        </tr>
-      </thead>
+    <div class="table-wrapper">
+      <table class="table-ui">
+        <thead>
+          <tr>
+            <th>Restaurant name</th>
+            <th>Picture</th>
+            <th>Address</th>
+            <th>Location</th>
+            <th>Cuisine</th>
+            <th>Rating</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-      <tbody id="adminRestaurantTable">
-        {% for r in restaurantList %}
-        <tr>
-          <td>{{ r.name }}</td>
-          <td>
-            <img
-              src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}"
-              alt="{{ r.name }}"
-            />
-          </td>
-          <td>{{ r.address }}</td>
-          <td>
-            <a href="{{ r.location }}" target="_blank">Map</a>
-          </td>
-          <td>{{ r.cuisine }}</td>
-          <td>{{ r.rating }}</td>
-          <td>
-            <a href="{% url 'admin_restaurant_detail' r.id %}"
-              ><button type="submit">View</button></a
-            >
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="7">No restaurants added yet.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        <tbody id="adminRestaurantTable">
+          {% for r in restaurantList %}
+          <tr>
+            <td><strong>{{ r.name }}</strong></td>
+            <td>
+              <img
+                src="{{ r.picture|default:'/static/delivery/images/default.jpg' }}"
+                alt="{{ r.name }}"
+              />
+            </td>
+            <td>{{ r.address }}</td>
+            <td>
+              <a href="{{ r.location }}" target="_blank" class="table-action"
+                >Map</a
+              >
+            </td>
+            <td>{{ r.cuisine }}</td>
+            <td>{{ r.rating }}</td>
+            <td>
+              <a
+                href="{% url 'admin_restaurant_detail' r.id %}"
+                class="table-action"
+                >View</a
+              >
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="table-empty">No restaurants added yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
     <!-- Add Restaurant Modal -->
     <div id="addRestaurantModal" class="modal">

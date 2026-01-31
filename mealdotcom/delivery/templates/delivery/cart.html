@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Cart</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/tables.css' %}" />
   </head>
   <body>
     Hello {{ name }}
@@ -11,104 +13,72 @@
     </a>
 
     <!-- TOTAL + CHECKOUT (TOP) -->
-    <div style="margin: 20px 0; padding: 10px; border: 1px solid #ccc">
-      <h2 style="display: inline-block; margin-right: 20px">
-        Total price: ₹ {{ total_price }}
-      </h2>
-
-      <form action="{% url 'checkout' name %}" style="display: inline-block">
-        <button type="submit" style="padding: 8px 16px; font-size: 16px">
-          CHECK OUT
-        </button>
+    <div class="summary-bar">
+      <h2>Total price: ₹ {{ total_price }}</h2>
+      <form action="{% url 'checkout' name %}">
+        <button class="btn-primary">Check Out</button>
       </form>
     </div>
 
-    <table border="1" width="100%" cellpadding="10">
-      <thead>
-        <tr>
-          <th width="50%">Item</th>
-          <th width="25%">Quantity</th>
-          <th width="25%">Price</th>
-        </tr>
-      </thead>
+    <div class="table-wrapper">
+      <table class="table-ui">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        {% for ci in cart_items %}
-        <tr>
-          <!-- COLUMN 1: ITEM -->
-          <td>
-            <div style="display: flex; align-items: center; gap: 15px">
-              <img src="{{ ci.item.picture }}" width="80" />
+        <tbody>
+          {% for ci in cart_items %}
+          <tr>
+            <!-- COLUMN 1: ITEM -->
+            <td>
+              <div style="display: flex; align-items: center; gap: 15px">
+                <img src="{{ ci.item.picture }}" />
 
-              <div>
-                <strong>{{ ci.item.name }}</strong><br />
-                {{ ci.item.description }}
+                <div>
+                  <strong>{{ ci.item.name }}</strong><br />
+                  <span style="color: #6b7280">{{ ci.item.description }}</span>
+                </div>
               </div>
-            </div>
-          </td>
+            </td>
 
-          <!-- COLUMN 2: QUANTITY + DELETE -->
-          <td align="center">
-            <div
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 12px;
-              "
-            >
+            <!-- COLUMN 2: QUANTITY + DELETE -->
+            <td align="center">
               <a
                 href="{% url 'cart_decrease' ci.item.id name %}"
-                style="font-size: 22px; text-decoration: none"
+                class="table-action"
                 >−</a
               >
-
-              <span
-                style="
-                  min-width: 30px;
-                  text-align: center;
-                  font-weight: bold;
-                  border: 1px solid #ccc;
-                  padding: 4px 8px;
-                "
-              >
-                {{ ci.quantity }}
-              </span>
-
+              <span class="qty-box">{{ ci.quantity }}</span>
               <a
                 href="{% url 'cart_increase' ci.item.id name %}"
-                style="font-size: 22px; text-decoration: none"
+                class="table-action"
                 >+</a
               >
-
-              <!-- TRASH ICON -->
               <a
                 href="{% url 'cart_delete' ci.item.id name %}"
-                style="
-                  font-size: 20px;
-                  margin-left: 10px;
-                  text-decoration: none;
-                "
-                title="Remove item"
+                class="table-action danger"
+                >🗑</a
               >
-                🗑️
-              </a>
-            </div>
-          </td>
+            </td>
 
-          <!-- COLUMN 3: PRICE -->
-          <td align="center">
-            ₹ {{ ci.item.price }} × {{ ci.quantity }}<br />
-            <strong>₹ {{ ci.subtotal }}</strong>
-          </td>
-        </tr>
+            <!-- COLUMN 3: PRICE -->
+            <td align="center">
+              ₹ {{ ci.item.price }} × {{ ci.quantity }}<br />
+              <span class="price">₹ {{ ci.subtotal }}</span>
+            </td>
+          </tr>
 
-        {% empty %}
-        <tr>
-          <td colspan="3" align="center">Your cart is empty</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% empty %}
+          <tr>
+            <td colspan="3" class="table-empty">Your cart is empty</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </body>
 </html>
