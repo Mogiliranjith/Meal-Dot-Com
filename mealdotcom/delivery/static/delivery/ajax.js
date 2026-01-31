@@ -25,6 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
       triggerSearch();
       triggerMenuSearch();
       triggerAdminSearch();
+
+      if (adminFoodSearchBox && adminMenuContainer) {
+        adminFoodSearchBox.dispatchEvent(new Event("keyup"));
+      }
     });
   }
 
@@ -175,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const query = adminFoodSearchBox.value.trim();
 
       fetch(
-        `/menu-live-search/?q=${query}&restaurant_id=${ADMIN_RESTAURANT_ID}`,
+        `/menu-live-search/?q=${query}&restaurant_id=${ADMIN_RESTAURANT_ID}&veg=${vegOnly}`,
       )
         .then((res) => res.json())
         .then((data) => {

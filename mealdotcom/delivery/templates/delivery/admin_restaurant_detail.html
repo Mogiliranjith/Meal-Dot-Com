@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'delivery/cards.css' %}" />
     <link rel="stylesheet" href="{% static 'delivery/modals.css' %}" />
     <link rel="stylesheet" href="{% static 'delivery/customer_menu.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
   </head>
 
   <body>
@@ -33,6 +34,15 @@
           id="adminFoodSearchBox"
           placeholder="Search menu items..."
         />
+
+        <!-- Veg Toggle-->
+         <div class="veg-toggle">
+          <input type="checkbox" id="vegToggle" hidden/>
+          <label for="vegToggle" class="veg-switch">
+            <span class="switch-thumb"></span>
+            <span class="switch-label">Veg</span>
+          </label>
+         </div>
 
         <div class="menu-actions">
           <button onclick="openUpdateModal()">Update</button>
