@@ -1,0 +1,119 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+/* Background */
+.bg {
+  height: 100vh;
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.55),
+      rgba(0, 0, 0, 0.65)
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glass Card */
+.glass-card {
+  width: 420px;
+  padding: 30px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  width: 48%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.tabs button:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Forms */
+.form-box h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.form-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.form-box input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.form-box button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.form-box button:hover {
+  transform: scale(1.02);
+}
+
+/* Messages */
+.msg {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.error {
+  color: #ffb3b3;
+}
+.success {
+  color: #b3ffcc;
+}
+
+/* Utilities */
+.hidden {
+  display: none;
+}

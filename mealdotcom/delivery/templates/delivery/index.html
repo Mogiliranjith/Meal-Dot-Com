@@ -1,59 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'delivery/styles.css' %}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'delivery/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'delivery/index.css' %}" />
 
-  <title>Welcome page</title>
-</head>
-<body>
-  <h1>Welcome to Meal[Dot]Com</h1>
+    <title>Welcome page</title>
+  </head>
+  <body>
+    <div
+      class="bg"
+      style="
+        background-image:
+          linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)),
+          url('{% static "delivery/images/background.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+    >
+      <div class="glass-card">
+        <h1 class="title">Meal-Dot-Com</h1>
 
-  {% if error%}
-    <p style="color: red;">{{ error }}</p>
-  {% endif %}
+        <div class="tabs">
+          <button id="signinBtn" onclick="showSignIn()">Sign In</button>
+          <button id="signupBtn" onclick="showSignUp()">Sign Up</button>
+        </div>
 
-  {% if success %}
-    <p style="color: green;">{{ success }}</p>
-  {% endif %}
+        {% if error %}
+        <p class="msg error">{{ error }}</p>
+        {% endif %} {% if success %}
+        <p class="msg success">{{ success }}</p>
+        {% endif %}
 
-  <button onclick="showSignIn()">SIGN_IN</button>
-  <button onclick="showSignUp()">SIGN_UP</button>
+        <!-- Sign In -->
+        <div id="signin" class="form-box">
+          <h2>Sign In</h2>
+          <form method="post" action="{% url 'signin' %}">
+            {% csrf_token %}
+            <input type="email" placeholder="Email" name="email" required />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              required
+            />
+            <button type="submit">Login</button>
+          </form>
+        </div>
 
-  <!-- Sign in -->
-  <div id="signin">
-    <h2>Sign In</h2>
-    <form method="post" action="{% url 'signin' %}">
-      {% csrf_token %}
-      <input type="email" placeholder="Email" name="email"><br><br>
-      <input type="password" placeholder="password" name="password"><br><br>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+        <!-- Sign Up -->
+        <div id="signup" class="form-box hidden">
+          <h2>Sign Up</h2>
+          <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="Name" name="name" required />
+            <input type="email" placeholder="Email" name="email" required />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              required
+            />
+            <input type="text" placeholder="Phone" name="phone" required />
+            <button type="submit">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
-  <!-- Sign up -->
-  <div id="signup" style="display: none;">
-    <h2>Sign Up</h2>
-    <form action="{% url 'signup' %}" method="post">
-      {% csrf_token %}
-
-      <input type="text" placeholder="Name" name="name"><br><br>
-
-      <input type="email" placeholder="Email" name="email" value="{{ request.POST.email }}"><br><br>
-
-      <input type="password" placeholder="Password" name="password"><br><br>
-
-      <input type="text" placeholder="Phone" name="phone"><br><br>
-
-      <button type="submit">Register</button>
-
-    </form>
-  </div>
-
-  <script src="{% static 'delivery/main.js' %}"></script>
-
-  <script>autoToggleForm("{{ show }}");</script>
-</body>
+    <script src="{% static 'delivery/main.js' %}"></script>
+    <script>
+      autoToggleForm("{{ show }}");
+    </script>
+  </body>
 </html>

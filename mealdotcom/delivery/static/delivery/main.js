@@ -1,17 +1,17 @@
 function showSignIn() {
-  document.getElementById("signin").style.display = "block";
-  document.getElementById("signup").style.display = "none"
+  document.getElementById("signin").classList.remove("hidden");
+  document.getElementById("signup").classList.add("hidden");
 }
 
 function showSignUp() {
-    document.getElementById("signup").style.display = "block"
-    document.getElementById("signin").style.display = "none";
+    document.getElementById("signup").classList.remove("hidden");
+    document.getElementById("signin").classList.add("hidden");
 }
 
 function autoToggleForm(form) {
-  if (form == "signup") {
+  if (form === "signup") {
     showSignUp();
-  } else if (form === "signin") {
+  } else {
     showSignIn();
   }
 }

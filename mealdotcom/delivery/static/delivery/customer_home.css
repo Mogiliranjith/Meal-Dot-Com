@@ -1,3 +1,17 @@
+:root {
+  /* Primary palette */
+  --bg-main: #FAF3E1; /* page background */
+  --bg-card: #F5E7C6; /* cards, dropdowns */
+  --accent: #FA8112; /* navbar, buttons */
+  --text-main: #222222;  /* text */
+  --text-light: #ffffff;  /* text on accent */
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
 /* Welcome text */
 .welcome-text {
   margin: 16px 30px;
@@ -8,8 +22,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 30px;
-  background: #fc8019;
-  color: white;
+  background: var(--accent);
+  color: var(--text-light);
 }
 
 .nav-left {
@@ -28,9 +42,14 @@
   width: 420px;
   padding: 8px 12px;
   border-radius: 6px;
-  border: none;
+  border: 1px solid var(--accent);
   outline: none;
   font-size: 14px;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+#searchBox::placeholder {
+  color: #777;
 }
 
 .nav-right {
@@ -44,6 +63,7 @@
 .logo {
   font-size: 20px;
   font-weight: bold;
+  color: var(--text-light);
 }
 
 .profile-wrapper {
@@ -60,8 +80,8 @@
   position: absolute;
   right: 0;
   top: 35px;
-  background: white;
-  color: black;
+  background: var(--bg-card);
+  color: var(--text-main);
   width: 160px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   z-index: 2000;
@@ -71,9 +91,36 @@
   display: block;
   padding: 10px;
   text-decoration: none;
-  color: black;
+  color: var(--text-main);
 }
 
 .profile-menu a:hover {
-  background: #f2f2f2;
+  background: var(--bg-main);
+}
+
+.cards {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cards a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cards a:hover {
+  text-decoration: underline;
+}
+
+.orders-btn {
+  background: var(--accent);
+  color: var(--text-light);
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
 }
